@@ -5,7 +5,7 @@
 # An implementation of the Hindley-Milner type checking algorithm based
 # on the paper "Basic Polymorphic Typechecking" by Cardelli
 #
-# Copyright (c) 2020 Alexei A. Smekalkine <ikle@ikle.ru>
+# Copyright (c) 2020-2022 Alexei A. Smekalkine <ikle@ikle.ru>
 #
 # SPDX-License-Identifier: BSD-2-Clause
 #
@@ -22,7 +22,7 @@ class Type (ABC):
 			for i in range (ord ('α'), ord ('ω')):
 				yield chr (i)
 
-		return o.show (gen (), False)
+		return o.show (gen ())
 
 	def prune (o):
 		"""
@@ -73,9 +73,9 @@ class Var (Type):
 		o.instance = None
 		o.name = None
 
-	def show (o, gen, guard):
+	def show (o, gen):
 		if o.instance is not None:
-			return o.instance.show (gen, guard)
+			return o.instance.show (gen)
 
 		if o.name is None:
 			o.name = next (gen)
@@ -118,24 +118,27 @@ class Op (Type):
 		o.name  = name
 		o.types = types
 
-	def show (o, gen, guard):
+	def show (o, gen):
 		if len (o.types) == 0:
 			return o.name
 
-		def f (o):
-			return o.show (gen, True)
+		def f (o, name = None):
+			o = o.prune ()
+
+			if isinstance (o, Var) or len (o.types) < 2 or o.name == name:
+				return o.show (gen)
+
+			return '(' + o.show (gen) + ')'
 
 		if o.name == "→":
-			dom = o.types[0].show (gen, True)
-			cod = o.types[1].show (gen, False)
-			fmt = '({} → {})' if guard else '{} → {}'
-			return fmt.format (dom, cod)
+			dom = f (o.types[0])
+			cod = f (o.types[1], o.name)
+			return "{} → {}".format (dom, cod)
 
 		if o.name == "×":
-			return "({})".format (" × ".join (map (f, o.types)))
+			return " × ".join (map (f, o.types))
 
-		fmt = '({} {})' if guard else '{} {}'
-		return fmt.format (o.name, ' '.join (map (f, o.types)))
+		return "{} {}".format (o.name, ' '.join (map (f, o.types)))
 
 	def __contains__ (o, v):
 		return any (v in t for t in o.types)
