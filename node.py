@@ -29,13 +29,13 @@ class Name (ast.Name, Expr):
 		return te.fresh (env[o.name], {}, non_generic)
 
 class Bool (ast.Bool, Expr):
-	T = te.Op ("bool", [])
+	T = te.Name ("bool")
 
 	def get_type (o, env, non_generic):
 		return o.T
 
 class Int (ast.Int, Expr):
-	T = te.Op ("int", [])
+	T = te.Name ("int")
 
 	def get_type (o, env, non_generic):
 		return o.T

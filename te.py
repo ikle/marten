@@ -156,6 +156,16 @@ class Op (Type):
 		for p, q in zip (o.types, t.types):
 			unify (p, q)
 
+class Name (Op):
+	def __init__ (o, name):
+		super ().__init__ (name, [])
+
+	def show (o, gen):
+		return o.name
+
+	def fresh (o, env, non_generic):
+		return o
+
 class Func (Op):
 	def __init__ (o, domain, codomain):
 		super ().__init__ ("→", [domain, codomain])
