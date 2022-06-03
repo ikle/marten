@@ -5,7 +5,7 @@
 # An implementation of the Hindley-Milner type checking algorithm based
 # on the paper "Basic Polymorphic Typechecking" by Cardelli
 #
-# Copyright (c) 2020 Alexei A. Smekalkine <ikle@ikle.ru>
+# Copyright (c) 2020-2022 Alexei A. Smekalkine <ikle@ikle.ru>
 #
 # SPDX-License-Identifier: BSD-2-Clause
 #
@@ -21,7 +21,7 @@ class Expr (ABC):
 
 # basic types
 
-class Id (ast.Id, Expr):
+class Name (ast.Name, Expr):
 	def get_type (o, env, non_generic):
 		if not o.name in env:
 			raise SyntaxError ("Undefined symbol " + o.name)
