@@ -136,7 +136,7 @@ class Op (Type):
 			return "{} → {}".format (dom, cod)
 
 		if o.name == "×":
-			return " × ".join (map (f, o.types))
+			return ", ".join (map (f, o.types))
 
 		return "{} {}".format (o.name, ' '.join (map (f, o.types)))
 
