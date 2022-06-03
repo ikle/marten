@@ -113,6 +113,14 @@ class Var (Type):
 
 		o.instance = t
 
+def guard (o, gen, name = None):
+	o = o.prune ()
+
+	if isinstance (o, Var) or len (o.types) < 2 or o.name == name:
+		return o.show (gen)
+
+	return '(' + o.show (gen) + ')'
+
 class Op (Type):
 	def __init__ (o, name, types):
 		o.name  = name
@@ -122,21 +130,8 @@ class Op (Type):
 		if len (o.types) == 0:
 			return o.name
 
-		def f (o, name = None):
-			o = o.prune ()
-
-			if isinstance (o, Var) or len (o.types) < 2 or o.name == name:
-				return o.show (gen)
-
-			return '(' + o.show (gen) + ')'
-
-		if o.name == "→":
-			dom = f (o.types[0])
-			cod = f (o.types[1], o.name)
-			return "{} → {}".format (dom, cod)
-
-		if o.name == "×":
-			return ", ".join (map (f, o.types))
+		def f (o):
+			return guard (o, gen)
 
 		return "{} {}".format (o.name, ' '.join (map (f, o.types)))
 
@@ -144,7 +139,10 @@ class Op (Type):
 		return any (v in t for t in o.types)
 
 	def fresh (o, env, non_generic):
-		return Op (o.name, [fresh (t, env, non_generic) for t in o.types])
+		kind  = type (o)
+		types = [fresh (t, env, non_generic) for t in o.types]
+
+		return Op (o.name, types) if kind is Op else kind (*types)
 
 	def unify (o, t):
 		if isinstance (t, Var):
@@ -158,8 +156,21 @@ class Op (Type):
 		for p, q in zip (o.types, t.types):
 			unify (p, q)
 
-def Func (domain, codomain):
-	return Op ("→", [domain, codomain])
+class Func (Op):
+	def __init__ (o, domain, codomain):
+		super ().__init__ ("→", [domain, codomain])
 
-def Prod (*args):
-	return Op ("×", args)
+	def show (o, gen):
+		dom = guard (o.types[0], gen)
+		cod = guard (o.types[1], gen, o.name)
+		return "{} → {}".format (dom, cod)
+
+class Prod (Op):
+	def __init__ (o, *args):
+		super ().__init__ ("×", args)
+
+	def show (o, gen):
+		def f (o):
+			return guard (o, gen)
+
+		return ", ".join (map (f, o.types))
