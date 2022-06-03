@@ -66,7 +66,12 @@ def fresh (o, env, non_generic):
 def unify (a, b):
 	"""Unify the two types a and b"""
 
-	a.prune ().unify (b.prune ())
+	(a, b) = (a.prune (), b.prune ())
+
+	if isinstance (a, Var):
+		a.unify (b)
+	else:
+		b.unify (a)
 
 class Var (Type):
 	def __init__ (o):
@@ -134,10 +139,6 @@ class Op (Type):
 		return type (o) (*types)
 
 	def unify (o, t):
-		if isinstance (t, Var):
-			t.unify (o)
-			return
-
 		if o.name != t.name or len (o.types) != len (t.types):
 			msg = "Type mismatch: " + str (o) + " ≠ " + str (t)
 			raise TypeError (msg)
