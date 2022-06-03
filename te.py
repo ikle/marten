@@ -122,27 +122,16 @@ def guard (o, gen, name = None):
 	return '(' + o.show (gen) + ')'
 
 class Op (Type):
-	def __init__ (o, name, types):
+	def __init__ (o, name, types = []):
 		o.name  = name
 		o.types = types
-
-	def show (o, gen):
-		if len (o.types) == 0:
-			return o.name
-
-		def f (o):
-			return guard (o, gen)
-
-		return "{} {}".format (o.name, ' '.join (map (f, o.types)))
 
 	def __contains__ (o, v):
 		return any (v in t for t in o.types)
 
 	def fresh (o, env, non_generic):
-		kind  = type (o)
 		types = [fresh (t, env, non_generic) for t in o.types]
-
-		return Op (o.name, types) if kind is Op else kind (*types)
+		return type (o) (*types)
 
 	def unify (o, t):
 		if isinstance (t, Var):
@@ -158,7 +147,7 @@ class Op (Type):
 
 class Name (Op):
 	def __init__ (o, name):
-		super ().__init__ (name, [])
+		super ().__init__ (name)
 
 	def show (o, gen):
 		return o.name
@@ -184,3 +173,12 @@ class Tuple (Op):
 			return guard (o, gen)
 
 		return ", ".join (map (f, o.types))
+
+class Apply (Op):
+	def __init__ (o, f, arg):
+		super ().__init__ ("apply", [f, arg])
+
+	def show (o, gen):
+		f   = guard (o.types[0], gen)
+		arg = guard (o.types[1], gen)
+		return "{} {}".format (f, arg)
