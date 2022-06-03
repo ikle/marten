@@ -130,25 +130,6 @@ def guard (o, gen, name = None):
 
 	return '(' + o.show (gen) + ')'
 
-class Op (Type):
-	def __init__ (o, name, types = []):
-		o.name  = name
-		o.types = types
-
-	def __contains__ (o, v):
-		return any (v in t for t in o.types)
-
-	def fresh (o, env, non_generic):
-		types = [fresh (t, env, non_generic) for t in o.types]
-		return type (o) (*types)
-
-	def unify (o, t):
-		if o.name != t.name or len (o.types) != len (t.types):
-			emit_mismatch (o, t)
-
-		for p, q in zip (o.types, t.types):
-			unify (p, q)
-
 class Name (Type):
 	def __init__ (o, name):
 		o.name = name
@@ -217,11 +198,27 @@ class Tuple (Type):
 		for p, q in zip (o.args, t.args):
 			unify (p, q)
 
-class Apply (Op):
+class Apply (Type):
 	def __init__ (o, f, arg):
-		super ().__init__ ("apply", [f, arg])
+		o.f   = f
+		o.arg = arg
+		o.name = 'apply'
+		o.types = [None, None]
 
 	def show (o, gen):
-		f   = guard (o.types[0], gen)
-		arg = guard (o.types[1], gen)
+		f   = guard (o.f,   gen)
+		arg = guard (o.arg, gen)
 		return "{} {}".format (f, arg)
+
+	def __contains__ (o, v):
+		return v in o.f or v in o.arg
+
+	def fresh (o, env, ng):
+		return Apply (fresh (o.f, env, ng), fresh (o.arg, env, ng))
+
+	def unify (o, t):
+		if type (t) is not Apply:
+			emit_mismatch (o, t)
+
+		unify (o.f,   t.f)
+		unify (o.arg, t.arg)
