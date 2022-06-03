@@ -167,14 +167,30 @@ class Name (Type):
 		if type (t) is not Name or o.name != t.name:
 			emit_mismatch (o, t)
 
-class Func (Op):
+class Func (Type):
 	def __init__ (o, domain, codomain):
-		super ().__init__ ("→", [domain, codomain])
+		o.x    = domain
+		o.body = codomain
+		o.name = '→'
+		o.types = [None, None]
 
 	def show (o, gen):
-		dom = guard (o.types[0], gen)
-		cod = guard (o.types[1], gen, o.name)
+		dom = guard (o.x,    gen)
+		cod = guard (o.body, gen, o.name)
 		return "{} → {}".format (dom, cod)
+
+	def __contains__ (o, v):
+		return v in o.x or v in o.body
+
+	def fresh (o, env, ng):
+		return Func (fresh (o.x, env, ng), fresh (o.body, env, ng))
+
+	def unify (o, t):
+		if type (t) is not Func:
+			emit_mismatch (o, t)
+
+		unify (o.x,    t.x)
+		unify (o.body, t.body)
 
 class Tuple (Op):
 	def __init__ (o, *args):
