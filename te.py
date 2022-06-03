@@ -192,15 +192,30 @@ class Func (Type):
 		unify (o.x,    t.x)
 		unify (o.body, t.body)
 
-class Tuple (Op):
+class Tuple (Type):
 	def __init__ (o, *args):
-		super ().__init__ ("×", args)
+		o.args = args
+		o.name = '×'
+		o.types = args
 
 	def show (o, gen):
 		def f (o):
 			return guard (o, gen)
 
 		return ", ".join (map (f, o.types))
+
+	def __contains__ (o, v):
+		return any (v in t for t in o.args)
+
+	def fresh (o, env, ng):
+		return Tuple (*[fresh (t, env, ng) for t in o.args])
+
+	def unify (o, t):
+		if type (t) is not Tuple or len (o.args) != len (t.args):
+			emit_mismatch (o, t)
+
+		for p, q in zip (o.args, t.args):
+			unify (p, q)
 
 class Apply (Op):
 	def __init__ (o, f, arg):
