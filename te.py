@@ -73,6 +73,10 @@ def unify (a, b):
 	else:
 		b.unify (a)
 
+def emit_mismatch (a, b):
+	msg = "Type mismatch: " + str (a) + " ≠ " + str (b)
+	raise TypeError (msg)
+
 class Var (Type):
 	def __init__ (o):
 		o.instance = None
@@ -140,21 +144,28 @@ class Op (Type):
 
 	def unify (o, t):
 		if o.name != t.name or len (o.types) != len (t.types):
-			msg = "Type mismatch: " + str (o) + " ≠ " + str (t)
-			raise TypeError (msg)
+			emit_mismatch (o, t)
 
 		for p, q in zip (o.types, t.types):
 			unify (p, q)
 
-class Name (Op):
+class Name (Type):
 	def __init__ (o, name):
-		super ().__init__ (name)
+		o.name = name
+		o.types = []
 
 	def show (o, gen):
 		return o.name
 
+	def __contains__ (o, v):
+		return False
+
 	def fresh (o, env, non_generic):
 		return o
+
+	def unify (o, t):
+		if type (t) is not Name or o.name != t.name:
+			emit_mismatch (o, t)
 
 class Func (Op):
 	def __init__ (o, domain, codomain):
