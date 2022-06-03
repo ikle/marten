@@ -175,7 +175,7 @@ class Func (Op):
 		cod = guard (o.types[1], gen, o.name)
 		return "{} → {}".format (dom, cod)
 
-class Prod (Op):
+class Tuple (Op):
 	def __init__ (o, *args):
 		super ().__init__ ("×", args)
 

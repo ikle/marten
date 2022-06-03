@@ -42,7 +42,7 @@ class Int (ast.Int, Expr):
 
 class Tuple (ast.Tuple, Expr):
 	def get_type (o, env, non_generic):
-		return te.Prod (*[n.get_type (env, non_generic) for n in o.args])
+		return te.Tuple (*[n.get_type (env, non_generic) for n in o.args])
 
 # core expressions
 
