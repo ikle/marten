@@ -12,17 +12,16 @@
 
 from abc import ABC, abstractmethod
 
+import ast
+
+def gen ():
+	for i in range (ord ('α'), ord ('ω')):
+		yield chr (i)
+
 class Type (ABC):
 	@abstractmethod
-	def show (o, gen, guard):
+	def touch (o, gen):
 		pass
-
-	def __str__ (o):
-		def gen ():
-			for i in range (ord ('α'), ord ('ω')):
-				yield chr (i)
-
-		return o.show (gen ())
 
 	def prune (o):
 		"""
@@ -77,19 +76,21 @@ def emit_mismatch (a, b):
 	msg = "Type mismatch: " + str (a) + " ≠ " + str (b)
 	raise TypeError (msg)
 
-class Var (Type):
+class Var (Type, ast.Name):
 	def __init__ (o):
 		o.instance = None
 		o.name = None
 
-	def show (o, gen):
+	def touch (o, gen):
 		if o.instance is not None:
-			return o.instance.show (gen)
+			o.instance.touch (gen)
+			return
 
 		if o.name is None:
 			o.name = next (gen)
 
-		return o.name
+	def __repr__ (o):
+		return o.name if o.instance is None else repr (o.instance)
 
 	def prune (o):
 #		return o if o.instance is None else o.instance.prune ()
@@ -121,22 +122,14 @@ class Var (Type):
 			raise TypeError ("Recursive unification")
 
 		o.instance = t
+		o.pri = t.pri
 
-def guard (o, gen, name = None):
-	o = o.prune ()
-
-	if isinstance (o, Var) or len (o.types) < 2 or o.name == name:
-		return o.show (gen)
-
-	return '(' + o.show (gen) + ')'
-
-class Name (Type):
+class Name (Type, ast.Name):
 	def __init__ (o, name):
 		o.name = name
-		o.types = []
 
-	def show (o, gen):
-		return o.name
+	def touch (o, gen):
+		pass
 
 	def __contains__ (o, v):
 		return False
@@ -148,17 +141,15 @@ class Name (Type):
 		if type (t) is not Name or o.name != t.name:
 			emit_mismatch (o, t)
 
-class Func (Type):
+class Func (Type, ast.Func):
 	def __init__ (o, domain, codomain):
 		o.x    = domain
 		o.body = codomain
-		o.name = '→'
-		o.types = [None, None]
 
-	def show (o, gen):
-		dom = guard (o.x,    gen)
-		cod = guard (o.body, gen, o.name)
-		return "{} → {}".format (dom, cod)
+	def touch (o, gen):
+		o.x.touch (gen)
+		o.body.touch (gen)
+		pass
 
 	def __contains__ (o, v):
 		return v in o.x or v in o.body
@@ -173,17 +164,13 @@ class Func (Type):
 		unify (o.x,    t.x)
 		unify (o.body, t.body)
 
-class Tuple (Type):
+class Tuple (Type, ast.Tuple):
 	def __init__ (o, *args):
 		o.args = args
-		o.name = '×'
-		o.types = args
 
-	def show (o, gen):
-		def f (o):
-			return guard (o, gen)
-
-		return ", ".join (map (f, o.types))
+	def touch (o, gen):
+		for v in o.args:
+			v.touch (gen)
 
 	def __contains__ (o, v):
 		return any (v in t for t in o.args)
@@ -198,17 +185,14 @@ class Tuple (Type):
 		for p, q in zip (o.args, t.args):
 			unify (p, q)
 
-class Apply (Type):
+class Apply (Type, ast.Apply):
 	def __init__ (o, f, arg):
 		o.f   = f
 		o.arg = arg
-		o.name = 'apply'
-		o.types = [None, None]
 
-	def show (o, gen):
-		f   = guard (o.f,   gen)
-		arg = guard (o.arg, gen)
-		return "{} {}".format (f, arg)
+	def touch (o, gen):
+		o.f.touch (gen)
+		o.arg.touch (gen)
 
 	def __contains__ (o, v):
 		return v in o.f or v in o.arg
