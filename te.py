@@ -156,13 +156,13 @@ class Pair (Type):
 		unify (o.x, t.x)
 		unify (o.y, t.y)
 
-class Func (ast.Func, Pair):
-	def __init__ (o, x, body):
-		super ().__init__ (x, body)
-
 class Prod (ast.Prod, Pair):
 	def __init__ (o, x, y):
 		super ().__init__ (x, y)
+
+class Func (ast.Func, Pair):
+	def __init__ (o, x, body):
+		super ().__init__ (x, body)
 
 class Apply (ast.Apply, Pair):
 	def __init__ (o, f, arg):

@@ -40,20 +40,11 @@ class Int (ast.Int, Expr):
 	def get_type (o, env, non_generic):
 		return o.T
 
+# core compound nodes
+
 class Prod (ast.Prod, Expr):
 	def get_type (o, env, ng):
 		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
-
-# core expressions
-
-class Cond (ast.Cond, Expr):
-	def get_type (o, env, non_generic):
-		c_type = o.c.get_type (env, non_generic)
-		te.unify (c_type, Bool.T)
-		t_type = o.t.get_type (env, non_generic)
-		f_type = o.f.get_type (env, non_generic)
-		te.unify (t_type, f_type)
-		return t_type
 
 class Func (ast.Func, Expr):
 	def get_type (o, env, non_generic):
@@ -72,6 +63,17 @@ class Apply (ast.Apply, Expr):
 		cod = te.Var ()
 		te.unify (f_type, te.Func (dom, cod))
 		return cod
+
+# core helper nodes
+
+class Cond (ast.Cond, Expr):
+	def get_type (o, env, non_generic):
+		c_type = o.c.get_type (env, non_generic)
+		te.unify (c_type, Bool.T)
+		t_type = o.t.get_type (env, non_generic)
+		f_type = o.f.get_type (env, non_generic)
+		te.unify (t_type, f_type)
+		return t_type
 
 class Let (ast.Let, Expr):
 	def get_type (o, env, non_generic):

@@ -43,6 +43,8 @@ class Int (Node):
 	def __repr__ (o):
 		return str (o.v)
 
+# core compound nodes
+
 class Prod (Node):
 	pri = 15
 
@@ -52,17 +54,6 @@ class Prod (Node):
 
 	def __repr__ (o):
 		return "{}, {}".format (o.gh (o.x), o.gt (o.y))
-
-class Cond (Node):
-	pri = 13
-
-	def __init__ (o, c, t, f):
-		o.c = c
-		o.t = t
-		o.f = f
-
-	def __repr__ (o):
-		return "{} ? {} : {}".format (o.gh (o.c), o.gt (o.t), o.gt (o.f))
 
 class Func (Node):
 	pri = 1
@@ -83,6 +74,19 @@ class Apply (Node):
 
 	def __repr__ (o):
 		return "{} {}".format (o.gt (o.x), o.gh (o.y))
+
+# core helper nodes
+
+class Cond (Node):
+	pri = 13
+
+	def __init__ (o, c, t, f):
+		o.c = c
+		o.t = t
+		o.f = f
+
+	def __repr__ (o):
+		return "{} ? {} : {}".format (o.gh (o.c), o.gt (o.t), o.gt (o.f))
 
 class Let (Node):
 	pri = 14
