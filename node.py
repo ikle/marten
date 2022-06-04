@@ -62,13 +62,13 @@ class Func (ast.Func, Expr):
 		new_env = {o.x.name: dom, **env}
 		new_non_generic = non_generic | {dom}
 
-		cod = o.body.get_type (new_env, new_non_generic)
+		cod = o.y.get_type (new_env, new_non_generic)
 		return te.Func (dom, cod)
 
 class Apply (ast.Apply, Expr):
 	def get_type (o, env, non_generic):
-		f_type = o.f.get_type  (env, non_generic)
-		dom = o.arg.get_type (env, non_generic)
+		f_type = o.x.get_type  (env, non_generic)
+		dom = o.y.get_type (env, non_generic)
 		cod = te.Var ()
 		te.unify (f_type, te.Func (dom, cod))
 		return cod

@@ -68,21 +68,21 @@ class Func (Node):
 	pri = 1
 
 	def __init__ (o, x, body):
-		o.x    = x
-		o.body = body
+		o.x = x
+		o.y = body
 
 	def __repr__ (o):
-		return "{} → {}".format (o.gh (o.x), o.gt (o.body))
+		return "{} → {}".format (o.gh (o.x), o.gt (o.y))
 
 class Apply (Node):
 	pri = 1
 
 	def __init__ (o, f, arg):
-		o.f   = f
-		o.arg = arg
+		o.x = f
+		o.y = arg
 
 	def __repr__ (o):
-		return "{} {}".format (o.gt (o.f), o.gh (o.arg))
+		return "{} {}".format (o.gt (o.x), o.gh (o.y))
 
 class Let (Node):
 	pri = 14
