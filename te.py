@@ -14,13 +14,9 @@ from abc import ABC, abstractmethod
 
 import ast
 
-def gen ():
-	for i in range (ord ('α'), ord ('ω')):
-		yield chr (i)
-
 class Type (ABC):
 	@abstractmethod
-	def touch (o, gen):
+	def touch (o, i = 0):
 		pass
 
 	def prune (o):
@@ -81,13 +77,15 @@ class Var (ast.Name, Type):
 		super ().__init__ (None)
 		o.instance = None
 
-	def touch (o, gen):
+	def touch (o, i = 0):
 		if o.instance is not None:
-			o.instance.touch (gen)
-			return
+			return o.instance.touch (i)
 
 		if o.name is None:
-			o.name = next (gen)
+			o.name = chr (ord ('α') + i)
+			return i + 1
+
+		return i
 
 	def __repr__ (o):
 		return o.name if o.instance is None else repr (o.instance)
@@ -128,8 +126,8 @@ class Name (ast.Name, Type):
 	def __init__ (o, name):
 		super ().__init__ (name)
 
-	def touch (o, gen):
-		pass
+	def touch (o, i = 0):
+		return i
 
 	def __contains__ (o, v):
 		return False
@@ -145,10 +143,8 @@ class Func (ast.Func, Type):
 	def __init__ (o, x, body):
 		super ().__init__ (x, body)
 
-	def touch (o, gen):
-		o.x.touch (gen)
-		o.body.touch (gen)
-		pass
+	def touch (o, i = 0):
+		return o.body.touch (o.x.touch (i))
 
 	def __contains__ (o, v):
 		return v in o.x or v in o.body
@@ -167,9 +163,11 @@ class Tuple (ast.Tuple, Type):
 	def __init__ (o, *args):
 		super ().__init__ (*args)
 
-	def touch (o, gen):
+	def touch (o, i = 0):
 		for v in o.args:
-			v.touch (gen)
+			i = v.touch (i)
+
+		return i
 
 	def __contains__ (o, v):
 		return any (v in t for t in o.args)
@@ -188,9 +186,8 @@ class Apply (ast.Apply, Type):
 	def __init__ (o, f, arg):
 		super ().__init__ (f, arg)
 
-	def touch (o, gen):
-		o.f.touch (gen)
-		o.arg.touch (gen)
+	def touch (o, i = 0):
+		return o.arg.touch (o.f.touch (i))
 
 	def __contains__ (o, v):
 		return v in o.f or v in o.arg
