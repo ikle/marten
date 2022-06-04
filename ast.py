@@ -43,12 +43,15 @@ class Int (Node):
 	def __repr__ (o):
 		return str (o.v)
 
-class Tuple (Node):
-	def __init__ (o, *args):
-		o.args = args
+class Prod (Node):
+	pri = 15
+
+	def __init__ (o, x, y):
+		o.x = x
+		o.y = y
 
 	def __repr__ (o):
-		return '(' + ', '.join (map (str, o.args)) + ')'
+		return "{}, {}".format (o.gh (o.x), o.gt (o.y))
 
 class Cond (Node):
 	pri = 13

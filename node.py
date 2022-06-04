@@ -40,9 +40,9 @@ class Int (ast.Int, Expr):
 	def get_type (o, env, non_generic):
 		return o.T
 
-class Tuple (ast.Tuple, Expr):
-	def get_type (o, env, non_generic):
-		return te.Tuple (*[n.get_type (env, non_generic) for n in o.args])
+class Prod (ast.Prod, Expr):
+	def get_type (o, env, ng):
+		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
 # core expressions
 

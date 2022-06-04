@@ -159,28 +159,25 @@ class Func (ast.Func, Type):
 		unify (o.x,    t.x)
 		unify (o.body, t.body)
 
-class Tuple (ast.Tuple, Type):
-	def __init__ (o, *args):
-		super ().__init__ (*args)
+class Prod (ast.Prod, Type):
+	def __init__ (o, x, y):
+		super ().__init__ (x, y)
 
 	def touch (o, i = 0):
-		for v in o.args:
-			i = v.touch (i)
-
-		return i
+		return o.y.touch (o.x.touch (i))
 
 	def __contains__ (o, v):
-		return any (v in t for t in o.args)
+		return v in o.x or v in o.y
 
 	def fresh (o, env, ng):
-		return Tuple (*[fresh (t, env, ng) for t in o.args])
+		return Prod (fresh (o.x, env, ng), fresh (o.y, env, ng))
 
 	def unify (o, t):
-		if type (t) is not Tuple or len (o.args) != len (t.args):
+		if type (t) is not Prod:
 			emit_mismatch (o, t)
 
-		for p, q in zip (o.args, t.args):
-			unify (p, q)
+		unify (o.x, t.x)
+		unify (o.y, t.y)
 
 class Apply (ast.Apply, Type):
 	def __init__ (o, f, arg):
