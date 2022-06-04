@@ -139,62 +139,31 @@ class Name (ast.Name, Type):
 		if type (t) is not Name or o.name != t.name:
 			emit_mismatch (o, t)
 
-class Func (ast.Func, Type):
+class Pair (Type):
+	def touch (o, i = 0):
+		return o.y.touch (o.x.touch (i))
+
+	def __contains__ (o, v):
+		return v in o.x or v in o.y
+
+	def fresh (o, env, ng):
+		return type (o) (fresh (o.x, env, ng), fresh (o.y, env, ng))
+
+	def unify (o, t):
+		if type (t) is not type (o):
+			emit_mismatch (o, t)
+
+		unify (o.x, t.x)
+		unify (o.y, t.y)
+
+class Func (ast.Func, Pair):
 	def __init__ (o, x, body):
 		super ().__init__ (x, body)
 
-	def touch (o, i = 0):
-		return o.y.touch (o.x.touch (i))
-
-	def __contains__ (o, v):
-		return v in o.x or v in o.y
-
-	def fresh (o, env, ng):
-		return Func (fresh (o.x, env, ng), fresh (o.y, env, ng))
-
-	def unify (o, t):
-		if type (t) is not Func:
-			emit_mismatch (o, t)
-
-		unify (o.x, t.x)
-		unify (o.y, t.y)
-
-class Prod (ast.Prod, Type):
+class Prod (ast.Prod, Pair):
 	def __init__ (o, x, y):
 		super ().__init__ (x, y)
 
-	def touch (o, i = 0):
-		return o.y.touch (o.x.touch (i))
-
-	def __contains__ (o, v):
-		return v in o.x or v in o.y
-
-	def fresh (o, env, ng):
-		return Prod (fresh (o.x, env, ng), fresh (o.y, env, ng))
-
-	def unify (o, t):
-		if type (t) is not Prod:
-			emit_mismatch (o, t)
-
-		unify (o.x, t.x)
-		unify (o.y, t.y)
-
-class Apply (ast.Apply, Type):
+class Apply (ast.Apply, Pair):
 	def __init__ (o, f, arg):
 		super ().__init__ (f, arg)
-
-	def touch (o, i = 0):
-		return o.y.touch (o.x.touch (i))
-
-	def __contains__ (o, v):
-		return v in o.x or v in o.y
-
-	def fresh (o, env, ng):
-		return Apply (fresh (o.x, env, ng), fresh (o.y, env, ng))
-
-	def unify (o, t):
-		if type (t) is not Apply:
-			emit_mismatch (o, t)
-
-		unify (o.x, t.x)
-		unify (o.y, t.y)
