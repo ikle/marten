@@ -76,10 +76,10 @@ def emit_mismatch (a, b):
 	msg = "Type mismatch: " + str (a) + " ≠ " + str (b)
 	raise TypeError (msg)
 
-class Var (Type, ast.Name):
+class Var (ast.Name, Type):
 	def __init__ (o):
+		super ().__init__ (None)
 		o.instance = None
-		o.name = None
 
 	def touch (o, gen):
 		if o.instance is not None:
@@ -124,9 +124,9 @@ class Var (Type, ast.Name):
 		o.instance = t
 		o.pri = t.pri
 
-class Name (Type, ast.Name):
+class Name (ast.Name, Type):
 	def __init__ (o, name):
-		o.name = name
+		super ().__init__ (name)
 
 	def touch (o, gen):
 		pass
@@ -141,10 +141,9 @@ class Name (Type, ast.Name):
 		if type (t) is not Name or o.name != t.name:
 			emit_mismatch (o, t)
 
-class Func (Type, ast.Func):
-	def __init__ (o, domain, codomain):
-		o.x    = domain
-		o.body = codomain
+class Func (ast.Func, Type):
+	def __init__ (o, x, body):
+		super ().__init__ (x, body)
 
 	def touch (o, gen):
 		o.x.touch (gen)
@@ -164,9 +163,9 @@ class Func (Type, ast.Func):
 		unify (o.x,    t.x)
 		unify (o.body, t.body)
 
-class Tuple (Type, ast.Tuple):
+class Tuple (ast.Tuple, Type):
 	def __init__ (o, *args):
-		o.args = args
+		super ().__init__ (*args)
 
 	def touch (o, gen):
 		for v in o.args:
@@ -185,10 +184,9 @@ class Tuple (Type, ast.Tuple):
 		for p, q in zip (o.args, t.args):
 			unify (p, q)
 
-class Apply (Type, ast.Apply):
+class Apply (ast.Apply, Type):
 	def __init__ (o, f, arg):
-		o.f   = f
-		o.arg = arg
+		super ().__init__ (f, arg)
 
 	def touch (o, gen):
 		o.f.touch (gen)
