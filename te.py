@@ -91,14 +91,7 @@ class Var (ast.Name, Type):
 		return o.name if o.instance is None else repr (o.instance)
 
 	def prune (o):
-#		return o if o.instance is None else o.instance.prune ()
-
-		if o.instance is None:
-			return o
-
-		# Collapse the list of type instances as an optimisation
-		o.instance = o.instance.prune ()
-		return o.instance
+		return o if o.instance is None else o.instance.prune ()
 
 	def __contains__ (o, v):
 		return o == v if o.instance is None else v in o.instance
