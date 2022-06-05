@@ -79,8 +79,8 @@ class Apply (ast.Apply, Pair):
 
 class Prod (ast.Prod, Pair):
 	def get_env (o, env, ng, rec):
-		o.x.get_env (env, ng)
-		o.y.get_env (env, ng)
+		o.x.get_env (env, ng, rec)
+		o.y.get_env (env, ng, rec)
 
 	def get_type (o, env, ng):
 		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
