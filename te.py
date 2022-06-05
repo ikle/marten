@@ -156,3 +156,28 @@ class Apply (ast.Apply, Pair):
 class Prod (ast.Prod, Pair):
 	def __init__ (o, x, y):
 		super ().__init__ (x, y)
+
+class Sum (ast.Sum, Pair):
+	def __init__ (o, x, y):
+		super ().__init__ (x, y)
+		o.ref = None
+
+	def touch (o, i = 0):
+		if o.ref is not None:
+			return o.ref.touch (i)
+
+		return o.y.touch (o.x.touch (i))
+
+	def prune (o):
+		return o if o.ref is None else o.ref.prune ()
+
+	def __contains__ (o, v):
+		return v in o.x or v in o.y if o.ref is None else v in o.ref
+
+	def unify (o, t):
+		try:
+			unify (o.x, t)
+			o.instance = o.x
+		except TypeError:
+			unify (o.y, t)
+			o.instance = o.y

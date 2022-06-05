@@ -75,6 +75,16 @@ class Prod (Node):
 	def __repr__ (o):
 		return "{}, {}".format (o.gh (o.x), o.gt (o.y))
 
+class Sum (Node):
+	pri = 16
+
+	def __init__ (o, x, y):
+		o.x = x
+		o.y = y
+
+	def __repr__ (o):
+		return "{} | {}".format (o.gh (o.x), o.gt (o.y))
+
 # core helper nodes
 
 class Cond (Node):

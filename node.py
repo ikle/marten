@@ -64,6 +64,10 @@ class Prod (ast.Prod, Expr):
 	def get_type (o, env, ng):
 		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
+class Sum (ast.Sum, Expr):
+	def get_type (o, env, ng):
+		return te.Sum (o.x.get_type (env, ng), o.y.get_type (env, ng))
+
 # core helper nodes
 
 class Cond (ast.Cond, Expr):
