@@ -15,6 +15,9 @@ import ast, te
 from abc import ABC, abstractmethod
 
 class Expr (ABC):
+	def get_free (o, env, non_generic):
+		pass
+
 	@abstractmethod
 	def get_type (o, env, non_generic):
 		pass
@@ -22,6 +25,11 @@ class Expr (ABC):
 # basic types
 
 class Name (ast.Name, Expr):
+	def get_free (o, env, ng):
+		if not o.name in env:
+			env[o.name] = v = te.Var ()
+			ng.add (v)
+
 	def get_type (o, env, non_generic):
 		if not o.name in env:
 			raise SyntaxError ("Undefined symbol " + o.name)
@@ -42,17 +50,23 @@ class Int (ast.Int, Expr):
 
 # core compound nodes
 
-class Func (ast.Func, Expr):
+class Pair (Expr):
+	def get_free (o, env, ng):
+		o.x.get_free (env, ng)
+		o.y.get_free (env, ng)
+
+class Func (ast.Func, Pair):
 	def get_type (o, env, non_generic):
-		dom = te.Var ()
+		new_env = env.copy ()
+		new_non_generic = non_generic.copy ()
 
-		new_env = {o.x.name: dom, **env}
-		new_non_generic = non_generic | {dom}
+		o.x.get_free (new_env, new_non_generic)
 
+		dom = o.x.get_type (new_env, new_non_generic)
 		cod = o.y.get_type (new_env, new_non_generic)
 		return te.Func (dom, cod)
 
-class Apply (ast.Apply, Expr):
+class Apply (ast.Apply, Pair):
 	def get_type (o, env, non_generic):
 		f_type = o.x.get_type  (env, non_generic)
 		dom = o.y.get_type (env, non_generic)
@@ -60,11 +74,11 @@ class Apply (ast.Apply, Expr):
 		te.unify (f_type, te.Func (dom, cod))
 		return cod
 
-class Prod (ast.Prod, Expr):
+class Prod (ast.Prod, Pair):
 	def get_type (o, env, ng):
 		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
-class Sum (ast.Sum, Expr):
+class Sum (ast.Sum, Pair):
 	def get_type (o, env, ng):
 		return te.Sum (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
