@@ -93,10 +93,11 @@ class Sum (ast.Sum, Pair):
 
 class Assign (ast.Assign, Pair):
 	def get_env (o, env, ng):
-		if not isinstance (o.x, Name):
-			raise SyntaxError ('Cannot assign to ' + str (o.x))
+		y_type = o.y.get_type (env, ng)
 
-		env[o.x.name] = o.y.get_type (env, ng)
+		o.x.get_free (env, ng)
+
+		te.unify (o.x.get_type (env, ng), y_type)
 
 	def get_type (o, env, ng):
 		x_type = o.x.get_type (env, ng)
@@ -116,7 +117,9 @@ class Cond (ast.Cond, Expr):
 class Let (ast.Let, Pair):
 	def get_type (o, env, ng):
 		new_env = env.copy ()
-		o.x.get_env (new_env, ng)
+		new_ng  = ng.copy ()
+
+		o.x.get_env (new_env, new_ng)
 
 		return o.y.get_type (new_env, ng)
 
