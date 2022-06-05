@@ -96,20 +96,10 @@ class Assign (ast.Assign, Pair):
 		if not isinstance (o.x, Name):
 			raise SyntaxError ('Cannot assign to ' + str (o.x))
 
-		if rec:
-			env[o.x.name] = v = te.Var ()
-			ng.add (v)
-		else:
-			env[o.x.name] = o.y.get_type (env, ng)
+		env[o.x.name] = o.y.get_type (env, ng)
 
 	def get_type (o, env, ng):
-		if not isinstance (o.x, Name):
-			raise SyntaxError ('Cannot assign to ' + str (o.x))
-		try:
-			x_type = env[o.x.name]
-		except:
-			raise SyntaxError ('Cannot assign to ' + str (o.x) +
-					   ' without context')
+		x_type = o.x.get_type (env, ng)
 
 		te.unify (x_type, o.y.get_type (env, ng))
 		return x_type
@@ -135,7 +125,7 @@ class Letrec (ast.Letrec, Pair):
 		new_env = env.copy ()
 		new_ng  = ng.copy ()
 
-		o.x.get_env  (new_env, new_ng, True)
+		o.x.get_free (new_env, new_ng)
 		o.x.get_type (new_env, new_ng)
 
 		return o.y.get_type (new_env, ng)
