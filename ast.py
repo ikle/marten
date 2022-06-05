@@ -109,13 +109,6 @@ class Let (Node):
 	def __repr__ (o):
 		return "let {} = {} in {}".format (o.name, o.defn, o.body)
 
-class Letrec (Node):
-	pri = 14
-
-	def __init__ (o, name, defn, body):
-		o.name = name.name
-		o.defn = defn
-		o.body = body
-
+class Letrec (Let):
 	def __repr__ (o):
 		return "let rec {} = {} in {}".format (o.name, o.defn, o.body)
