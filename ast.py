@@ -45,42 +45,31 @@ class Int (Node):
 
 # core compound nodes
 
-class Func (Node):
-	pri = 1
-
-	def __init__ (o, x, body):
+class Pair (Node):
+	def __init__ (o, x, y):
 		o.x = x
-		o.y = body
+		o.y = y
+
+class Func (Pair):
+	pri = 1
 
 	def __repr__ (o):
 		return "{} → {}".format (o.gh (o.x), o.gt (o.y))
 
-class Apply (Node):
+class Apply (Pair):
 	pri = 1
-
-	def __init__ (o, f, arg):
-		o.x = f
-		o.y = arg
 
 	def __repr__ (o):
 		return "{} {}".format (o.gt (o.x), o.gh (o.y))
 
-class Prod (Node):
+class Prod (Pair):
 	pri = 15
-
-	def __init__ (o, x, y):
-		o.x = x
-		o.y = y
 
 	def __repr__ (o):
 		return "{}, {}".format (o.gh (o.x), o.gt (o.y))
 
-class Sum (Node):
+class Sum (Pair):
 	pri = 16
-
-	def __init__ (o, x, y):
-		o.x = x
-		o.y = y
 
 	def __repr__ (o):
 		return "{} | {}".format (o.gh (o.x), o.gt (o.y))
