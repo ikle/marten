@@ -42,10 +42,6 @@ class Int (ast.Int, Expr):
 
 # core compound nodes
 
-class Prod (ast.Prod, Expr):
-	def get_type (o, env, ng):
-		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
-
 class Func (ast.Func, Expr):
 	def get_type (o, env, non_generic):
 		dom = te.Var ()
@@ -63,6 +59,10 @@ class Apply (ast.Apply, Expr):
 		cod = te.Var ()
 		te.unify (f_type, te.Func (dom, cod))
 		return cod
+
+class Prod (ast.Prod, Expr):
+	def get_type (o, env, ng):
+		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
 # core helper nodes
 

@@ -45,16 +45,6 @@ class Int (Node):
 
 # core compound nodes
 
-class Prod (Node):
-	pri = 15
-
-	def __init__ (o, x, y):
-		o.x = x
-		o.y = y
-
-	def __repr__ (o):
-		return "{}, {}".format (o.gh (o.x), o.gt (o.y))
-
 class Func (Node):
 	pri = 1
 
@@ -74,6 +64,16 @@ class Apply (Node):
 
 	def __repr__ (o):
 		return "{} {}".format (o.gt (o.x), o.gh (o.y))
+
+class Prod (Node):
+	pri = 15
+
+	def __init__ (o, x, y):
+		o.x = x
+		o.y = y
+
+	def __repr__ (o):
+		return "{}, {}".format (o.gh (o.x), o.gt (o.y))
 
 # core helper nodes
 
