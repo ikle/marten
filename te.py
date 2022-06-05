@@ -68,10 +68,6 @@ def unify (a, b):
 	else:
 		b.unify (a)
 
-def emit_mismatch (a, b):
-	msg = "Type mismatch: " + str (a) + " ≠ " + str (b)
-	raise TypeError (msg)
-
 class Var (ast.Name, Type):
 	def __init__ (o):
 		super ().__init__ (None)
@@ -130,7 +126,7 @@ class Name (ast.Name, Type):
 
 	def unify (o, t):
 		if type (t) is not Name or o.name != t.name:
-			emit_mismatch (o, t)
+			raise TypeError ("Type mismatch: {} ≠ {}".format (o, t))
 
 class Pair (Type):
 	def touch (o, i = 0):
@@ -144,7 +140,7 @@ class Pair (Type):
 
 	def unify (o, t):
 		if type (t) is not type (o):
-			emit_mismatch (o, t)
+			raise TypeError ("Type mismatch: {} ≠ {}".format (o, t))
 
 		unify (o.x, t.x)
 		unify (o.y, t.y)
