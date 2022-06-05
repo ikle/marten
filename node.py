@@ -18,7 +18,7 @@ class Expr (ABC):
 	def get_free (o, env, non_generic):
 		pass
 
-	def get_env (o, env, non_generic, rec):
+	def get_env (o, env, non_generic):
 		pass
 
 	@abstractmethod
@@ -78,9 +78,9 @@ class Apply (ast.Apply, Pair):
 		return cod
 
 class Prod (ast.Prod, Pair):
-	def get_env (o, env, ng, rec):
-		o.x.get_env (env, ng, rec)
-		o.y.get_env (env, ng, rec)
+	def get_env (o, env, ng):
+		o.x.get_env (env, ng)
+		o.y.get_env (env, ng)
 
 	def get_type (o, env, ng):
 		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
@@ -92,7 +92,7 @@ class Sum (ast.Sum, Pair):
 # core helper nodes
 
 class Assign (ast.Assign, Pair):
-	def get_env (o, env, ng, rec):
+	def get_env (o, env, ng):
 		if not isinstance (o.x, Name):
 			raise SyntaxError ('Cannot assign to ' + str (o.x))
 
@@ -116,7 +116,7 @@ class Cond (ast.Cond, Expr):
 class Let (ast.Let, Pair):
 	def get_type (o, env, ng):
 		new_env = env.copy ()
-		o.x.get_env (new_env, ng, False)
+		o.x.get_env (new_env, ng)
 
 		return o.y.get_type (new_env, ng)
 
