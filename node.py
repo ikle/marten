@@ -18,6 +18,9 @@ class Expr (ABC):
 	def get_free (o, env, non_generic):
 		pass
 
+	def get_env (o, env, non_generic, rec):
+		pass
+
 	@abstractmethod
 	def get_type (o, env, non_generic):
 		pass
@@ -75,6 +78,10 @@ class Apply (ast.Apply, Pair):
 		return cod
 
 class Prod (ast.Prod, Pair):
+	def get_env (o, env, ng, rec):
+		o.x.get_env (env, ng)
+		o.y.get_env (env, ng)
+
 	def get_type (o, env, ng):
 		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
@@ -83,6 +90,29 @@ class Sum (ast.Sum, Pair):
 		return te.Sum (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
 # core helper nodes
+
+class Assign (ast.Assign, Pair):
+	def get_env (o, env, ng, rec):
+		if not isinstance (o.x, Name):
+			raise SyntaxError ('Cannot assign to' + o.x)
+
+		if rec:
+			env[o.x.name] = v = te.Var ()
+			ng.add (v)
+		else:
+			env[o.x.name] = o.y.get_type (env, ng)
+
+	def get_type (o, env, ng):
+		if not isinstance (o.x, Name):
+			raise SyntaxError ('Cannot assign to ' + o.x)
+		try:
+			x_type = env[o.x.name]
+		except:
+			raise SyntaxError ('Cannot assign to ' + o.x +
+					   ' without context')
+
+		te.unify (x_type, o.y.get_type (env, ng))
+		return x_type
 
 class Cond (ast.Cond, Expr):
 	def get_type (o, env, ng):
@@ -95,20 +125,21 @@ class Cond (ast.Cond, Expr):
 
 class Let (ast.Let, Expr):
 	def get_type (o, env, ng):
-		defn_type = o.defn.get_type (env, ng)
+		x = Assign (Name (o.name), o.defn)
 
-		new_env = {o.name: defn_type, **env}
+		new_env = env.copy ()
+		x.get_env (new_env, ng, False)
 
 		return o.body.get_type (new_env, ng)
 
 class Letrec (ast.Letrec, Expr):
 	def get_type (o, env, ng):
-		new_type = te.Var ()
+		x = Assign (Name (o.name), o.defn)
 
-		new_env = {o.name: new_type, **env}
-		new_ng  = ng | {new_type}
+		new_env = env.copy ()
+		new_ng  = ng.copy ()
 
-		defn_type = o.defn.get_type (new_env, new_ng)
-		te.unify (new_type, defn_type)
+		x.get_env  (new_env, new_ng, True)
+		x.get_type (new_env, new_ng)
 
 		return o.body.get_type (new_env, ng)

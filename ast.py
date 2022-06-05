@@ -76,6 +76,12 @@ class Sum (Pair):
 
 # core helper nodes
 
+class Assign (Pair):
+	pri = 14
+
+	def __repr__ (o):
+		return "{} = {}".format (o.gh (o.x), o.gt (o.y))
+
 class Cond (Node):
 	pri = 13
 
