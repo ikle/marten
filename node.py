@@ -94,7 +94,7 @@ class Sum (ast.Sum, Pair):
 class Assign (ast.Assign, Pair):
 	def get_env (o, env, ng, rec):
 		if not isinstance (o.x, Name):
-			raise SyntaxError ('Cannot assign to' + o.x)
+			raise SyntaxError ('Cannot assign to ' + str (o.x))
 
 		if rec:
 			env[o.x.name] = v = te.Var ()
@@ -104,11 +104,11 @@ class Assign (ast.Assign, Pair):
 
 	def get_type (o, env, ng):
 		if not isinstance (o.x, Name):
-			raise SyntaxError ('Cannot assign to ' + o.x)
+			raise SyntaxError ('Cannot assign to ' + str (o.x))
 		try:
 			x_type = env[o.x.name]
 		except:
-			raise SyntaxError ('Cannot assign to ' + o.x +
+			raise SyntaxError ('Cannot assign to ' + str (o.x) +
 					   ' without context')
 
 		te.unify (x_type, o.y.get_type (env, ng))
