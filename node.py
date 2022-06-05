@@ -123,23 +123,19 @@ class Cond (ast.Cond, Expr):
 		te.unify (t_type, f_type)
 		return t_type
 
-class Let (ast.Let, Expr):
+class Let (ast.Let, Pair):
 	def get_type (o, env, ng):
-		x = Assign (Name (o.name), o.defn)
-
 		new_env = env.copy ()
-		x.get_env (new_env, ng, False)
+		o.x.get_env (new_env, ng, False)
 
-		return o.body.get_type (new_env, ng)
+		return o.y.get_type (new_env, ng)
 
-class Letrec (ast.Letrec, Expr):
+class Letrec (ast.Letrec, Pair):
 	def get_type (o, env, ng):
-		x = Assign (Name (o.name), o.defn)
-
 		new_env = env.copy ()
 		new_ng  = ng.copy ()
 
-		x.get_env  (new_env, new_ng, True)
-		x.get_type (new_env, new_ng)
+		o.x.get_env  (new_env, new_ng, True)
+		o.x.get_type (new_env, new_ng)
 
-		return o.body.get_type (new_env, ng)
+		return o.y.get_type (new_env, ng)

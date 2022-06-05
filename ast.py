@@ -93,17 +93,10 @@ class Cond (Node):
 	def __repr__ (o):
 		return "{} ? {} : {}".format (o.gh (o.c), o.gt (o.t), o.gt (o.f))
 
-class Let (Node):
-	pri = 14
-
-	def __init__ (o, name, defn, body):
-		o.name = name.name
-		o.defn = defn
-		o.body = body
-
+class Let (Pair):
 	def __repr__ (o):
-		return "let {} = {} in {}".format (o.name, o.defn, o.body)
+		return "let {} in {}".format (o.x, o.y)
 
-class Letrec (Let):
+class Letrec (Pair):
 	def __repr__ (o):
-		return "let rec {} = {} in {}".format (o.name, o.defn, o.body)
+		return "let rec {} in {}".format (o.x, o.y)
