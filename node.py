@@ -58,6 +58,10 @@ class Pair (Expr):
 		o.x.get_free (env, ng)
 		o.y.get_free (env, ng)
 
+	def get_env (o, env, ng):
+		o.x.get_env (env, ng)
+		o.y.get_env (env, ng)
+
 class Func (ast.Func, Pair):
 	def get_type (o, env, ng):
 		new_env = env.copy ()
@@ -78,10 +82,6 @@ class Apply (ast.Apply, Pair):
 		return cod
 
 class Prod (ast.Prod, Pair):
-	def get_env (o, env, ng):
-		o.x.get_env (env, ng)
-		o.y.get_env (env, ng)
-
 	def get_type (o, env, ng):
 		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
