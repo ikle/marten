@@ -103,10 +103,7 @@ class Assign (ast.Assign, Pair):
 		te.unify (o.x.get_type (env, ng), y_type)
 
 	def get_type (o, env, ng):
-		x_type = o.x.get_type (env, ng)
-
-		te.unify (x_type, o.y.get_type (env, ng))
-		return x_type
+		raise SyntaxError ('No context to assign to ' + str (o.x))
 
 class Cond (ast.Cond, Expr):
 	def get_type (o, env, ng):
