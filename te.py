@@ -126,8 +126,7 @@ class Name (ast.Name, Type):
 
 	def unify (o, t):
 		if type (t) is not Name or o.name != t.name:
-			o.touch ()
-			t.touch ()
+			t.touch (o.touch ())
 			raise TypeError ("Type mismatch: {} ≠ {}".format (o, t))
 
 class Pair (Type):
@@ -142,8 +141,7 @@ class Pair (Type):
 
 	def unify (o, t):
 		if type (t) is not type (o):
-			o.touch ()
-			t.touch ()
+			t.touch (o.touch ())
 			raise TypeError ("Type mismatch: {} ≠ {}".format (o, t))
 
 		unify (o.x, t.x)
