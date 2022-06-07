@@ -62,6 +62,12 @@ class Apply (Pair):
 	def __repr__ (o):
 		return "{} {}".format (o.gt (o.x), o.gh (o.y))
 
+class Case (Pair):
+	pri = 12
+
+	def __repr__ (o):
+		return "{} | {}".format (o.gh (o.x), o.gt (o.y))
+
 class Prod (Pair):
 	pri = 15
 

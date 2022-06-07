@@ -91,6 +91,12 @@ class Sum (ast.Sum, Pair):
 
 # core helper nodes
 
+class Case (ast.Case, Pair):
+	def get_type (o, env, ng):
+		x_type = o.x.get_type (env, ng)
+		te.unify (x_type, o.y.get_type (env, ng))
+		return x_type
+
 class Assign (ast.Assign, Pair):
 	def get_env (o, rec, env, ng, new_env, new_ng):
 		o.x.get_names (new_env, new_ng)
