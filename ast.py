@@ -51,7 +51,7 @@ class Pair (Node):
 		o.y = y
 
 class Func (Pair):
-	pri = 1
+	pri = 2
 
 	def __repr__ (o):
 		return "{} → {}".format (o.gh (o.x), o.gt (o.y))
