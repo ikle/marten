@@ -15,7 +15,7 @@ import ast, te
 from abc import ABC, abstractmethod
 
 class Expr (ABC):
-	def get_free (o, env, non_generic):
+	def get_names (o, env, non_generic):
 		pass
 
 	def get_env (o, rec, env, non_generic, new_env, new_non_generic):
@@ -28,7 +28,7 @@ class Expr (ABC):
 # basic types
 
 class Name (ast.Name, Expr):
-	def get_free (o, env, ng):
+	def get_names (o, env, ng):
 		if not o.name in env:
 			env[o.name] = v = te.Var ()
 			ng.add (v)
@@ -54,9 +54,9 @@ class Int (ast.Int, Expr):
 # core compound nodes
 
 class Pair (Expr):
-	def get_free (o, env, ng):
-		o.x.get_free (env, ng)
-		o.y.get_free (env, ng)
+	def get_names (o, env, ng):
+		o.x.get_names (env, ng)
+		o.y.get_names (env, ng)
 
 	def get_env (o, rec, env, ng, new_env, new_ng):
 		o.x.get_env (rec, env, ng, new_env, new_ng)
@@ -67,7 +67,7 @@ class Func (ast.Func, Pair):
 		new_env = env.copy ()
 		new_ng  = ng.copy ()
 
-		o.x.get_free (new_env, new_ng)
+		o.x.get_names (new_env, new_ng)
 
 		dom = o.x.get_type (new_env, new_ng)
 		cod = o.y.get_type (new_env, new_ng)
@@ -93,7 +93,7 @@ class Sum (ast.Sum, Pair):
 
 class Assign (ast.Assign, Pair):
 	def get_env (o, rec, env, ng, new_env, new_ng):
-		o.x.get_free (new_env, new_ng)
+		o.x.get_names (new_env, new_ng)
 
 		y_type = o.y.get_type (new_env, new_ng) if rec else \
 			 o.y.get_type (env, ng)
