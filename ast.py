@@ -72,7 +72,7 @@ class Sum (Pair):
 	pri = 16
 
 	def __repr__ (o):
-		return "{} | {}".format (o.gh (o.x), o.gt (o.y))
+		return "{}; {}".format (o.gh (o.x), o.gt (o.y))
 
 # core helper nodes
 
