@@ -18,7 +18,7 @@ class Expr (ABC):
 	def get_free (o, env, non_generic):
 		pass
 
-	def get_env (o, env, non_generic, rec):
+	def get_env (o, rec, env, non_generic, new_env, new_non_generic):
 		pass
 
 	@abstractmethod
@@ -58,9 +58,9 @@ class Pair (Expr):
 		o.x.get_free (env, ng)
 		o.y.get_free (env, ng)
 
-	def get_env (o, env, ng, rec):
-		o.x.get_env (env, ng, rec)
-		o.y.get_env (env, ng, rec)
+	def get_env (o, rec, env, ng, new_env, new_ng):
+		o.x.get_env (rec, env, ng, new_env, new_ng)
+		o.y.get_env (rec, env, ng, new_env, new_ng)
 
 class Func (ast.Func, Pair):
 	def get_type (o, env, ng):
@@ -92,15 +92,13 @@ class Sum (ast.Sum, Pair):
 # core helper nodes
 
 class Assign (ast.Assign, Pair):
-	def get_env (o, env, ng, rec):
-		if rec:
-			o.x.get_free (env, ng)
-			y_type = o.y.get_type (env, ng)
-		else:
-			y_type = o.y.get_type (env, ng)
-			o.x.get_free (env, ng)
+	def get_env (o, rec, env, ng, new_env, new_ng):
+		o.x.get_free (new_env, new_ng)
 
-		te.unify (o.x.get_type (env, ng), y_type)
+		y_type = o.y.get_type (new_env, new_ng) if rec else \
+			 o.y.get_type (env, ng)
+
+		te.unify (o.x.get_type (new_env, new_ng), y_type)
 
 	def get_type (o, env, ng):
 		raise SyntaxError ('No context to assign to ' + str (o.x))
@@ -119,7 +117,7 @@ class Let (ast.Let, Pair):
 		new_env = env.copy ()
 		new_ng  = ng.copy ()
 
-		o.x.get_env (new_env, new_ng, False)
+		o.x.get_env (False, env, ng, new_env, new_ng)
 
 		return o.y.get_type (new_env, ng)
 
@@ -128,6 +126,6 @@ class Letrec (ast.Letrec, Pair):
 		new_env = env.copy ()
 		new_ng  = ng.copy ()
 
-		o.x.get_env (new_env, new_ng, True)
+		o.x.get_env (True, env, ng, new_env, new_ng)
 
 		return o.y.get_type (new_env, ng)
