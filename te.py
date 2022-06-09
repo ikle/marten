@@ -15,9 +15,8 @@ from abc import ABC, abstractmethod
 import ast
 
 class Type (ABC):
-	@abstractmethod
 	def touch (o, i = 0):
-		pass
+		return i
 
 	def prune (o):
 		"""
@@ -114,9 +113,6 @@ class Var (ast.Name, Type):
 class Name (ast.Name, Type):
 	def __init__ (o, name):
 		super ().__init__ (name)
-
-	def touch (o, i = 0):
-		return i
 
 	def __contains__ (o, v):
 		return False
