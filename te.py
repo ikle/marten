@@ -66,9 +66,9 @@ def unify (a, b):
 		b.unify (a)
 
 class Var (ast.Name, Type):
-	def __init__ (o):
-		super ().__init__ (None)
-		o.instance = None
+	def __init__ (o, name = None, instance = None):
+		super ().__init__ (name)
+		o.instance = instance
 
 	def touch (o, i = 0):
 		if o.instance is not None:
