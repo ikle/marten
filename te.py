@@ -35,7 +35,6 @@ class Type (ABC):
 		"""Checks if type variable v occurs in type"""
 		return False
 
-	@abstractmethod
 	def fresh (o, env, non_generic):
 		"""
 		The Fresh method makes a copy of a type expression,
@@ -46,7 +45,7 @@ class Type (ABC):
 		instantiated to a type term, in which case the variables
 		contained in the type term are considered non-generic.
 		"""
-		pass
+		return o
 
 	@abstractmethod
 	def unify (o, t):
@@ -110,9 +109,6 @@ class Var (ast.Name, Type):
 		o.pri = t.pri
 
 class Name (ast.Name, Type):
-	def fresh (o, env, non_generic):
-		return o
-
 	def unify (o, t):
 		if type (t) is not Name or o.name != t.name:
 			t.touch (o.touch ())
