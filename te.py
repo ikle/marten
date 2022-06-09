@@ -161,7 +161,7 @@ class Sum (ast.Sum, Pair):
 	def unify (o, t):
 		try:
 			unify (o.x, t)
-			o.instance = o.x
+			o.ref = o.x
 		except TypeError:
 			unify (o.y, t)
-			o.instance = o.y
+			o.ref = o.y
