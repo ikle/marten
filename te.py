@@ -14,7 +14,7 @@ from abc import ABC, abstractmethod
 
 import ast
 
-class Type (ABC):
+class Node (ABC):
 	def touch (o, i = 0):
 		return i
 
@@ -56,7 +56,7 @@ def fresh (o, env, non_generic):
 	return o.prune ().fresh (env, non_generic)
 
 def unify (a, b):
-	"""Unify the two types a and b"""
+	"""Unify the two nodes a and b"""
 
 	(a, b) = (a.prune (), b.prune ())
 
@@ -65,7 +65,7 @@ def unify (a, b):
 	else:
 		b.unify (a)
 
-class Var (ast.Name, Type):
+class Var (ast.Name, Node):
 	def __init__ (o, name = None, instance = None):
 		super ().__init__ (name)
 		o.instance = instance
@@ -108,13 +108,13 @@ class Var (ast.Name, Type):
 		o.instance = t
 		o.pri = t.pri
 
-class Name (ast.Name, Type):
+class Name (ast.Name, Node):
 	def unify (o, t):
 		if type (t) is not Name or o.name != t.name:
 			t.touch (o.touch ())
 			raise TypeError ("Type mismatch: {} ≠ {}".format (o, t))
 
-class Pair (Type):
+class Pair (Node):
 	def touch (o, i = 0):
 		return o.y.touch (o.x.touch (i))
 
