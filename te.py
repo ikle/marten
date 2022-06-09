@@ -111,9 +111,6 @@ class Var (ast.Name, Type):
 		o.pri = t.pri
 
 class Name (ast.Name, Type):
-	def __init__ (o, name):
-		super ().__init__ (name)
-
 	def __contains__ (o, v):
 		return False
 
@@ -144,16 +141,13 @@ class Pair (Type):
 		unify (o.y, t.y)
 
 class Func (ast.Func, Pair):
-	def __init__ (o, x, body):
-		super ().__init__ (x, body)
+	pass
 
 class Apply (ast.Apply, Pair):
-	def __init__ (o, f, arg):
-		super ().__init__ (f, arg)
+	pass
 
 class Prod (ast.Prod, Pair):
-	def __init__ (o, x, y):
-		super ().__init__ (x, y)
+	pass
 
 class Sum (ast.Sum, Pair):
 	def __init__ (o, x, y):
