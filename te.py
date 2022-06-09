@@ -31,10 +31,9 @@ class Type (ABC):
 		"""
 		return o
 
-	@abstractmethod
 	def __contains__ (o, v):
 		"""Checks if type variable v occurs in type"""
-		pass
+		return False
 
 	@abstractmethod
 	def fresh (o, env, non_generic):
@@ -111,9 +110,6 @@ class Var (ast.Name, Type):
 		o.pri = t.pri
 
 class Name (ast.Name, Type):
-	def __contains__ (o, v):
-		return False
-
 	def fresh (o, env, non_generic):
 		return o
 
