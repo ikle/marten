@@ -107,7 +107,7 @@ class Letrec (Pair):
 	def __repr__ (o):
 		return "let rec {} in {}".format (o.x, o.y)
 
-# arithmetic nodes
+# arithmetic nodes, left associative
 
 class Mul (Pair):
 	pri = 3
@@ -132,3 +132,41 @@ class Sub (Pair):
 
 	def __repr__ (o):
 		return "{} - {}".format (o.gt (o.x), o.gh (o.y))
+
+# relation nodes, left associative
+
+class Lt (Pair):
+	pri = 6
+
+	def __repr__ (o):
+		return "{} < {}".format (o.gt (o.x), o.gh (o.y))
+
+class Le (Pair):
+	pri = 6
+
+	def __repr__ (o):
+		return "{} ≤ {}".format (o.gt (o.x), o.gh (o.y))
+
+class Gt (Pair):
+	pri = 6
+
+	def __repr__ (o):
+		return "{} > {}".format (o.gt (o.x), o.gh (o.y))
+
+class Ge (Pair):
+	pri = 6
+
+	def __repr__ (o):
+		return "{} ≥ {}".format (o.gt (o.x), o.gh (o.y))
+
+class Eq (Pair):
+	pri = 7
+
+	def __repr__ (o):
+		return "{} = {}".format (o.gt (o.x), o.gh (o.y))
+
+class Ne (Pair):
+	pri = 7
+
+	def __repr__ (o):
+		return "{} ≠ {}".format (o.gt (o.x), o.gh (o.y))
