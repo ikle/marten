@@ -138,10 +138,10 @@ class Func (ast.Func, Pair):
 class Apply (ast.Apply, Pair):
 	pass
 
-class Prod (ast.Prod, Pair):
+class Prod (ast.Mul, Pair):
 	pass
 
-class Sum (ast.Sum, Pair):
+class Sum (ast.Add, Pair):
 	def __init__ (o, x, y):
 		super ().__init__ (x, y)
 		o.ref = None
