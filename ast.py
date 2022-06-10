@@ -106,3 +106,29 @@ class Let (Pair):
 class Letrec (Pair):
 	def __repr__ (o):
 		return "let rec {} in {}".format (o.x, o.y)
+
+# arithmetic nodes
+
+class Mul (Pair):
+	pri = 3
+
+	def __repr__ (o):
+		return "{} × {}".format (o.gt (o.x), o.gh (o.y))
+
+class Div (Pair):
+	pri = 3
+
+	def __repr__ (o):
+		return "{} ÷ {}".format (o.gt (o.x), o.gh (o.y))
+
+class Add (Pair):
+	pri = 4
+
+	def __repr__ (o):
+		return "{} + {}".format (o.gt (o.x), o.gh (o.y))
+
+class Sub (Pair):
+	pri = 4
+
+	def __repr__ (o):
+		return "{} - {}".format (o.gt (o.x), o.gh (o.y))
