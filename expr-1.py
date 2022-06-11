@@ -101,7 +101,7 @@ class Pair (Op):
 			elif o.y == o.zero:
 				o = o.x
 
-		return o.distrib ().lflatten ()
+		return o.distrib ()
 
 def flatten (o):
 	F = []
