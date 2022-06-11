@@ -30,12 +30,6 @@ class Unit:
 	def rflatten (o, z = None):
 		return o
 
-	def ldistrib (o):
-		return o
-
-	def rdistrib (o):
-		return o
-
 	def distrib (o):
 		return o
 
@@ -91,22 +85,14 @@ class Pair (Op):
 
 		return o.x.rflatten (z) if tx is to else to (o.x.rflatten (), z)
 
-	def ldistrib (o):
+	def distrib (o):
 		while type (o.y) in o.ld:
 			o = type (o.y) (type (o) (o.x, o.y.x), type (o) (o.x, o.y.y))
 
-#		return type (o) (o.x.ldistrib (), o.y.ldistrib ())
-		return type (o) (o.x.prune (), o.y.prune ())
-
-	def rdistrib (o):
 		while type (o.x) in o.rd:
 			o = type (o.x) (type (o) (o.x.x, o.y), type (o) (o.x.y, o.y))
 
-#		return type (o) (o.x.rdistrib (), o.y.rdistrib ())
 		return type (o) (o.x.prune (), o.y.prune ())
-
-	def distrib (o):
-		return o.ldistrib ().rdistrib ()
 
 	def prune (o):
 		if o.zero is not None:
@@ -221,8 +207,6 @@ print ('left  flatten   =', o.lflatten ())
 print ('right flatten   =', o.rflatten ())
 print ('left from right =', o.rflatten ().lflatten ())
 
-print ('left  distrib   =', o.ldistrib ())
-print ('right distrib   =', o.rdistrib ())
 print ('flat  distrib   =', o.distrib ().lflatten ())
 print ('prune           =', o.prune ())
 
