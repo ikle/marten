@@ -107,6 +107,12 @@ class Pair (Op):
 		return o.ldistrib ().rdistrib ()
 
 	def prune (o):
+		if o.zero is not None:
+			if o.x == o.zero:
+				o = o.y
+			elif o.y == o.zero:
+				o = o.x
+
 		return o.distrib ().lflatten ()
 
 def flatten (o):
