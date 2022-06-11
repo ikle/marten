@@ -87,13 +87,13 @@ class Pair (Op):
 			while o.x == o.zero or o.y == o.zero:
 				o = o.x if o.y == o.zero else o.y
 
-		to, tx, ty = type (o), type (o.x), type (o.y)
+		while type (o.y) in o.ld:
+			to = type (o)
+			o  = type (o.y) (to (o.x, o.y.x), to (o.x, o.y.y))
 
-		while ty in o.ld:
-			o = ty (to (o.x, o.y.x), to (o.x, o.y.y))
-
-		while tx in o.rd:
-			o = tx (to (o.x.x, o.y), to (o.x.y, o.y))
+		while type (o.x) in o.rd:
+			to = type (o)
+			o  = type (o.x) (to (o.x.x, o.y), to (o.x.y, o.y))
 
 		return type (o) (o.x.prune (), o.y.prune ())
 
