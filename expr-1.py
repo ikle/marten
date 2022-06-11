@@ -105,20 +105,6 @@ class Pair (Op):
 
 		return o.distrib ()
 
-def flatten (o):
-	F = []
-
-	for e in o.args:
-		if isinstance (e, Op):
-			e = prune (e)
-
-		if type (o) is type (e):
-			F.extend (flatten (e))
-		else:
-			F.append (e)
-
-	return F
-
 def prune (o):
 	if isinstance (o, Unit):
 		return o
