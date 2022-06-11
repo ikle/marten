@@ -36,6 +36,9 @@ class Unit:
 	def rdistrib (o):
 		return o
 
+	def distrib (o):
+		return o
+
 class Op:
 	zero = None	# identity value
 	a    = False	# is associative?
@@ -96,6 +99,9 @@ class Pair (Op):
 			o = type (o.x) (type (o) (o.x.x, o.y), type (o) (o.x.y, o.y))
 
 		return type (o) (o.x.rdistrib (), o.y.rdistrib ())
+
+	def distrib (o):
+		return o.ldistrib ().rdistrib ()
 
 def flatten (o):
 	F = []
@@ -203,7 +209,7 @@ print ('left from right =', o.rflatten ().lflatten ())
 
 print ('left  distrib   =', o.ldistrib ())
 print ('right distrib   =', o.rdistrib ())
-print ('flat  distrib   =', o.ldistrib ().rdistrib ().lflatten ())
+print ('flat  distrib   =', o.distrib ().lflatten ())
 
 # print ('pruned =', prune (o))
 
