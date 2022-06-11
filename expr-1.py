@@ -95,13 +95,15 @@ class Pair (Op):
 		while type (o.y) in o.ld:
 			o = type (o.y) (type (o) (o.x, o.y.x), type (o) (o.x, o.y.y))
 
-		return type (o) (o.x.ldistrib (), o.y.ldistrib ())
+#		return type (o) (o.x.ldistrib (), o.y.ldistrib ())
+		return type (o) (o.x.prune (), o.y.prune ())
 
 	def rdistrib (o):
 		while type (o.x) in o.rd:
 			o = type (o.x) (type (o) (o.x.x, o.y), type (o) (o.x.y, o.y))
 
-		return type (o) (o.x.rdistrib (), o.y.rdistrib ())
+#		return type (o) (o.x.rdistrib (), o.y.rdistrib ())
+		return type (o) (o.x.prune (), o.y.prune ())
 
 	def distrib (o):
 		return o.ldistrib ().rdistrib ()
