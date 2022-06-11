@@ -84,10 +84,8 @@ class Pair (Op):
 
 	def prune (o):
 		if o.zero is not None:
-			if o.x == o.zero:
-				o = o.y
-			elif o.y == o.zero:
-				o = o.x
+			while o.x == o.zero or o.y == o.zero:
+				o = o.x if o.y == o.zero else o.y
 
 		to, tx, ty = type (o), type (o.x), type (o.y)
 
