@@ -83,9 +83,8 @@ class Pair (Op):
 		return o.x.rflatten (z) if tx is to else to (o.x.rflatten (), z)
 
 	def prune (o):
-		if o.zero is not None:
-			while o.x == o.zero or o.y == o.zero:
-				o = o.x if o.y == o.zero else o.y
+		while o.x == o.zero or o.y == o.zero:
+			o = o.x if o.y == o.zero else o.y
 
 		while type (o.y) in o.ld:
 			to = type (o)
