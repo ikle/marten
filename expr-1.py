@@ -86,11 +86,13 @@ class Pair (Op):
 		return o.x.rflatten (z) if tx is to else to (o.x.rflatten (), z)
 
 	def distrib (o):
-		while type (o.y) in o.ld:
-			o = type (o.y) (type (o) (o.x, o.y.x), type (o) (o.x, o.y.y))
+		to, tx, ty = type (o), type (o.x), type (o.y)
 
-		while type (o.x) in o.rd:
-			o = type (o.x) (type (o) (o.x.x, o.y), type (o) (o.x.y, o.y))
+		while ty in o.ld:
+			o = ty (to (o.x, o.y.x), to (o.x, o.y.y))
+
+		while tx in o.rd:
+			o = tx (to (o.x.x, o.y), to (o.x.y, o.y))
 
 		return type (o) (o.x.prune (), o.y.prune ())
 
