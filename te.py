@@ -65,7 +65,7 @@ def unify (a, b):
 	else:
 		b.unify (a)
 
-class Var (ast.Name, Node):
+class Var (Node, ast.Name):
 	def __init__ (o, name = None, instance = None):
 		super ().__init__ (name)
 		o.instance = instance
@@ -108,7 +108,7 @@ class Var (ast.Name, Node):
 		o.instance = t
 		o.pri = t.pri
 
-class Name (ast.Name, Node):
+class Name (Node, ast.Name):
 	def unify (o, t):
 		if type (t) is not Name or o.name != t.name:
 			t.touch (o.touch ())
@@ -132,16 +132,16 @@ class Pair (Node):
 		unify (o.x, t.x)
 		unify (o.y, t.y)
 
-class Func (ast.Func, Pair):
+class Func (Pair, ast.Func):
 	pass
 
-class Apply (ast.Apply, Pair):
+class Apply (Pair, ast.Apply):
 	pass
 
-class Prod (ast.Mul, Pair):
+class Prod (Pair, ast.Mul):
 	pass
 
-class Sum (ast.Add, Pair):
+class Sum (Pair, ast.Add):
 	def __init__ (o, x, y):
 		super ().__init__ (x, y)
 		o.ref = None
