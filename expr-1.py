@@ -22,6 +22,9 @@ class Unit:
 		return type (a) == type (b) and a.x == b.x
 
 	def __lt__ (a, b):
+		if isinstance (b, Pair):
+			return True
+
 		if type (a) is not type (b):
 			return type (a).__name__ < type (b).__name__
 
@@ -67,6 +70,9 @@ class Pair (Op):
 		return a.x == b.x and a.y == b.y
 
 	def __lt__ (a, b):
+		if isinstance (b, Unit):
+			return False
+
 		if type (a) is not type (b):
 			return type (a).__name__ < type (b).__name__
 
