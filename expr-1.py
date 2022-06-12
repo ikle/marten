@@ -8,7 +8,10 @@
 
 import ast
 
-class Unit:
+class Expr:
+	pass
+
+class Unit (Expr):
 	def __init__ (o, x):
 		o.x = x
 
@@ -39,7 +42,7 @@ class Unit:
 	def prune (o):
 		return o
 
-class Op:
+class Op (Expr):
 	zero = None	# identity value
 	a    = False	# is associative?
 	c    = False	# is commutative?
