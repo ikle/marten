@@ -12,6 +12,15 @@ class Expr:
 	def __lt__ (a, b):
 		return str (a) < str (b)
 
+	def rotate_left (o):
+		return o
+
+	def remap (o, M):
+		return M.get (o, o)
+
+	def prune (o):
+		return o
+
 class Unit (Expr):
 	def __init__ (o, x):
 		o.x = x
@@ -21,15 +30,6 @@ class Unit (Expr):
 
 	def __eq__ (a, b):
 		return type (a) == type (b) and a.x == b.x
-
-	def rotate_left (o):
-		return o
-
-	def remap (o, M):
-		return M.get (o, o)
-
-	def prune (o):
-		return o
 
 class Op (Expr):
 	zero = None	# identity value
