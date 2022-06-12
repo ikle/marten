@@ -30,12 +30,6 @@ class Unit:
 
 		return a.x < b.x
 
-	def lflatten (o, z = None):
-		return o
-
-	def rflatten (o, z = None):
-		return o
-
 	def rotate_left (o):
 		return o
 
@@ -77,28 +71,6 @@ class Pair (Op):
 			return type (a).__name__ < type (b).__name__
 
 		return a.y < b.y if a.x == b.x else a.x < b.x
-
-	def lflatten (o, z = None):
-		to, tx, ty = type (o), type (o.x), type (o.y)
-
-		if tx is to:
-			z = o.x.lflatten (z)
-		else:
-			x = o.x.lflatten ()
-			z = x if z is None else to (z, x)
-
-		return o.y.lflatten (z) if ty is to else to (z, o.y.lflatten ())
-
-	def rflatten (o, z = None):
-		to, tx, ty = type (o), type (o.x), type (o.y)
-
-		if ty is to:
-			z = o.y.rflatten (z)
-		else:
-			y = o.y.rflatten ()
-			z = y if z is None else to (y, z)
-
-		return o.x.rflatten (z) if tx is to else to (o.x.rflatten (), z)
 
 	def rotate_left (o):
 		while o.a and type (o.y) is type (o):
@@ -217,10 +189,6 @@ o = [
 o = parse (o)
 
 print ('parsed          =', o)
-print ('left  flatten   =', o.lflatten ())
-print ('right flatten   =', o.rflatten ())
-print ('left from right =', o.rflatten ().lflatten ())
-
 print ('prune           =', o.prune ())
 
 # print ('pruned =', prune (o))
