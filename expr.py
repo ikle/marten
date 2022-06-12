@@ -6,6 +6,8 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
+import tree
+
 class Expr:
 	def __lt__ (a, b):
 		return str (a) < str (b)
@@ -19,15 +21,8 @@ class Expr:
 	def prune (o):
 		return o
 
-class Unit (Expr):
-	def __init__ (o, x):
-		o.x = x
-
-	def __hash__ (o):
-		return hash (type (o)) + hash (o.x)
-
-	def __eq__ (a, b):
-		return type (a) == type (b) and a.x == b.x
+class Unit (Expr, tree.Unit):
+	pass
 
 class Op (Expr):
 	zero = None	# identity value
@@ -36,17 +31,7 @@ class Op (Expr):
 	ld   = set ()	# set of ops this one left-distributive over
 	rd   = set ()	# set of ops this one right-distributive over
 
-class Pair (Op):
-	def __init__ (o, x, y):
-		o.x = x
-		o.y = y
-
-	def __hash__ (o):
-		return hash (type (o)) + hash (o.x) + hash (o.y)
-
-	def __eq__ (a, b):
-		return type (a) is type (b) and a.x == b.x and a.y == b.y
-
+class Pair (Op, tree.Pair):
 	def rotate_left (o):
 		while o.a and type (o.y) is type (o):
 			to = type (o)
