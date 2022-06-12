@@ -6,8 +6,6 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
-import ast
-
 class Expr:
 	def __lt__ (a, b):
 		return str (a) < str (b)
@@ -96,79 +94,3 @@ class Pair (Op):
 			o  = type (o.x) (to (o.x.x, o.y), to (o.x.y, o.y))
 
 		return type (o) (o.x.prune (), o.y.prune ()).rotate_left ().sort ()
-
-class Name (Unit, ast.Name):
-	def __init__ (o, x):
-		o.x = o.name = x
-
-class Int (Unit, ast.Int):
-	def __init__ (o, x):
-		o.x = o.v = x
-
-class Add (Pair, ast.Add):
-	zero = Int (0)
-	a    = True
-	c    = True
-
-class Mul (Pair, ast.Mul):
-	zero = Int (1)
-	a    = True
-	c    = True
-	ld   = {Add}
-	rd   = {Add}
-
-def foldl (fn, zero, seq):
-	return foldl (fn, fn (zero, seq[0]), seq[1:]) if seq else zero
-
-def foldr (fn, zero, seq):
-	return fn (seq[0], foldr (fn, zero, seq[1:])) if seq else zero
-
-def parse (o):
-	if isinstance (o, str):
-		return Name (o)
-
-	if isinstance (o, int):
-		return Int (o)
-
-	if isinstance (o, list):
-		if len (o) == 0:
-			return Name ('ε')
-
-		if len (o) == 1:
-			return Name (o[0])
-
-		A = [parse (e) for e in o[1:]]
-
-		if len (A) == 1:
-			return A[0]
-
-		if o[0] == '+':
-			return foldl (Add, A[0], A[1:])
-
-		if o[0] == '×':
-			return foldl (Mul, A[0], A[1:])
-
-	raise 'Cannot parse ' + repr (o)
-
-o = [
-	'+',
-	['×', 1, ['×', 'x', 'z'], 'y'],
-	['+', 1],
-	['×', 2],
-	['×', 'y', 'z', 'b'],
-	0,
-	['×',
-		['+', 'x', 'a'],
-		['+', 'x', 'y', 'b']
-	]
-]
-
-o = parse (o)
-
-print ('parsed          =', o)
-print ('prune           =', o.prune ())
-
-# print ('pruned =', prune (o))
-
-#	def __iter__ (o):
-#		return iter (o.dict)
