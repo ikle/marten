@@ -15,6 +15,9 @@ class Unit:
 #	def __repr__ (o):
 #		return repr (o.x)
 
+	def __hash__ (o):
+		return hash (o.x)
+
 	def __eq__ (a, b):
 		return type (a) == type (b) and a.x == b.x
 
@@ -50,6 +53,9 @@ class Pair (Op):
 
 #	def __repr__ (o):
 #		return '({} {})'.format (repr (o.x), repr (o.y))
+
+	def __hash__ (o):
+		return hash (type (o)) + hash (o.x) + hash (o.y)
 
 	def __eq__ (a, b):
 		if type (a) is not type (b):
