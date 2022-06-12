@@ -13,8 +13,7 @@ class Name (expr.Unit, ast.Name):
 		o.x = o.name = x
 
 class Int (expr.Unit, ast.Int):
-	def __init__ (o, x):
-		o.x = o.v = x
+	pass
 
 class Add (expr.Pair, ast.Add):
 	zero = Int (0)

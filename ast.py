@@ -31,17 +31,17 @@ class Name (Node):
 
 class Bool (Node):
 	def __init__ (o, v):
-		o.v = v
+		o.x = v
 
 	def __repr__ (o):
-		return str (o.v).lower ()
+		return str (o.x).lower ()
 
 class Int (Node):
 	def __init__ (o, v):
-		o.v = v
+		o.x = v
 
 	def __repr__ (o):
-		return str (o.v)
+		return str (o.x)
 
 # core compound nodes
 
