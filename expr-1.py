@@ -70,7 +70,7 @@ class Pair (Op):
 		if type (a) is not type (b):
 			return type (a).__name__ < type (b).__name__
 
-		return a.y < b.y if a.x == b.y else a.x < b.x
+		return a.y < b.y if a.x == b.x else a.x < b.x
 
 	def lflatten (o, z = None):
 		to, tx, ty = type (o), type (o.x), type (o.y)
