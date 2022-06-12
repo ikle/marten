@@ -27,7 +27,7 @@ class Expr (ABC):
 
 # basic types
 
-class Name (ast.Name, Expr):
+class Name (Expr, ast.Name):
 	def get_names (o, env, ng):
 		if not o.name in env:
 			env[o.name] = v = te.Var ()
@@ -39,13 +39,13 @@ class Name (ast.Name, Expr):
 
 		return te.fresh (env[o.name], {}, ng)
 
-class Bool (ast.Bool, Expr):
+class Bool (Expr, ast.Bool):
 	T = te.Name ("bool")
 
 	def get_type (o, env, ng):
 		return o.T
 
-class Int (ast.Int, Expr):
+class Int (Expr, ast.Int):
 	T = te.Name ("int")
 
 	def get_type (o, env, ng):
@@ -62,7 +62,7 @@ class Pair (Expr):
 		o.x.get_env (rec, env, ng, new_env, new_ng)
 		o.y.get_env (rec, env, ng, new_env, new_ng)
 
-class Func (ast.Func, Pair):
+class Func (Pair, ast.Func):
 	def get_type (o, env, ng):
 		new_env = env.copy ()
 		new_ng  = ng.copy ()
@@ -73,7 +73,7 @@ class Func (ast.Func, Pair):
 		cod = o.y.get_type (new_env, new_ng)
 		return te.Func (dom, cod)
 
-class Apply (ast.Apply, Pair):
+class Apply (Pair, ast.Apply):
 	def get_type (o, env, ng):
 		f_type = o.x.get_type (env, ng)
 		dom = o.y.get_type (env, ng)
@@ -81,23 +81,23 @@ class Apply (ast.Apply, Pair):
 		te.unify (f_type, te.Func (dom, cod))
 		return cod
 
-class Prod (ast.Prod, Pair):
+class Prod (Pair, ast.Prod):
 	def get_type (o, env, ng):
 		return te.Prod (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
-class Sum (ast.Sum, Pair):
+class Sum (Pair, ast.Sum):
 	def get_type (o, env, ng):
 		return te.Sum (o.x.get_type (env, ng), o.y.get_type (env, ng))
 
 # core helper nodes
 
-class Case (ast.Case, Pair):
+class Case (Pair, ast.Case):
 	def get_type (o, env, ng):
 		x_type = o.x.get_type (env, ng)
 		te.unify (x_type, o.y.get_type (env, ng))
 		return x_type
 
-class Assign (ast.Assign, Pair):
+class Assign (Pair, ast.Assign):
 	def get_env (o, rec, env, ng, new_env, new_ng):
 		o.x.get_names (new_env, new_ng)
 
@@ -109,7 +109,7 @@ class Assign (ast.Assign, Pair):
 	def get_type (o, env, ng):
 		raise SyntaxError ('No context to assign to ' + str (o.x))
 
-class Cond (ast.Cond, Expr):
+class Cond (Expr, ast.Cond):
 	def get_type (o, env, ng):
 		c_type = o.c.get_type (env, ng)
 		te.unify (c_type, Bool.T)
@@ -118,7 +118,7 @@ class Cond (ast.Cond, Expr):
 		te.unify (t_type, f_type)
 		return t_type
 
-class Let (ast.Let, Pair):
+class Let (Pair, ast.Let):
 	def get_type (o, env, ng):
 		new_env = env.copy ()
 		new_ng  = ng.copy ()
@@ -127,7 +127,7 @@ class Let (ast.Let, Pair):
 
 		return o.y.get_type (new_env, ng)
 
-class Letrec (ast.Letrec, Pair):
+class Letrec (Pair, ast.Letrec):
 	def get_type (o, env, ng):
 		new_env = env.copy ()
 		new_ng  = ng.copy ()
