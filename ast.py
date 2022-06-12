@@ -7,6 +7,8 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 
+import tree
+
 class Node ():
 	pri = 0
 
@@ -29,14 +31,14 @@ class Name (Node):
 	def __repr__ (o):
 		return o.name
 
-class Bool (Node):
+class Bool (Node, tree.Unit):
 	def __init__ (o, v):
 		o.x = v
 
 	def __repr__ (o):
 		return str (o.x).lower ()
 
-class Int (Node):
+class Int (Node, tree.Unit):
 	def __init__ (o, v):
 		o.x = v
 
@@ -45,7 +47,7 @@ class Int (Node):
 
 # core compound nodes
 
-class Pair (Node):
+class Pair (Node, tree.Pair):
 	def __init__ (o, x, y):
 		o.x = x
 		o.y = y
