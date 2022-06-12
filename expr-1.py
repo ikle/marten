@@ -47,10 +47,7 @@ class Pair (Op):
 		return hash (type (o)) + hash (o.x) + hash (o.y)
 
 	def __eq__ (a, b):
-		if type (a) is not type (b):
-			return False
-
-		return a.x == b.x and a.y == b.y
+		return type (a) is type (b) and a.x == b.x and a.y == b.y
 
 	def rotate_left (o):
 		while o.a and type (o.y) is type (o):
