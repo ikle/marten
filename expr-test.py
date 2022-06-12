@@ -74,5 +74,5 @@ o = [
 
 o = parse (o)
 
-print ('parsed          =', o)
-print ('prune           =', o.prune ())
+print ('parsed =', o)
+print ('pruned =', o.prune ())
