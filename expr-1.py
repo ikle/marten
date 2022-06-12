@@ -105,7 +105,7 @@ class Pair (Op):
 			to = type (o)
 			o  = type (o.x) (to (o.x.x, o.y), to (o.x.y, o.y))
 
-		return type (o) (o.x.prune (), o.y.prune ())
+		return type (o) (o.x.prune (), o.y.prune ()).rotate_left ()
 
 def prune (o):
 	if isinstance (o, Unit):
