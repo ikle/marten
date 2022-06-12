@@ -8,7 +8,7 @@
 
 import tree
 
-class Expr:
+class Node:
 	def __lt__ (a, b):
 		return str (a) < str (b)
 
@@ -21,10 +21,10 @@ class Expr:
 	def prune (o):
 		return o
 
-class Unit (Expr, tree.Unit):
+class Unit (Node, tree.Unit):
 	pass
 
-class Pair (Expr, tree.Pair):
+class Pair (Node, tree.Pair):
 	zero = None	# identity value
 	a    = False	# is associative?
 	c    = False	# is commutative?
