@@ -24,14 +24,13 @@ class Expr:
 class Unit (Expr, tree.Unit):
 	pass
 
-class Op (Expr):
+class Pair (Expr, tree.Pair):
 	zero = None	# identity value
 	a    = False	# is associative?
 	c    = False	# is commutative?
 	ld   = set ()	# set of ops this one left-distributive over
 	rd   = set ()	# set of ops this one right-distributive over
 
-class Pair (Op, tree.Pair):
 	def rotate_left (o):
 		while o.a and type (o.y) is type (o):
 			to = type (o)
