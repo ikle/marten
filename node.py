@@ -29,15 +29,15 @@ class Expr (ABC):
 
 class Name (Expr, ast.Name):
 	def get_names (o, env, ng):
-		if not o.name in env:
-			env[o.name] = v = te.Var ()
+		if not o.x in env:
+			env[o.x] = v = te.Var ()
 			ng.add (v)
 
 	def get_type (o, env, ng):
-		if not o.name in env:
-			raise SyntaxError ("Undefined symbol " + o.name)
+		if not o.x in env:
+			raise SyntaxError ("Undefined symbol " + o.x)
 
-		return te.fresh (env[o.name], {}, ng)
+		return te.fresh (env[o.x], {}, ng)
 
 class Bool (Expr, ast.Bool):
 	T = te.Name ("bool")

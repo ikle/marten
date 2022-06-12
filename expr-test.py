@@ -9,8 +9,7 @@
 import ast, expr
 
 class Name (expr.Unit, ast.Name):
-	def __init__ (o, x):
-		o.x = o.name = x
+	pass
 
 class Int (expr.Unit, ast.Int):
 	pass

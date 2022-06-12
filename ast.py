@@ -24,12 +24,9 @@ class Node ():
 
 		return "({})".format (str (n))
 
-class Name (Node):
-	def __init__ (o, name):
-		o.name = name
-
+class Name (Node, tree.Unit):
 	def __repr__ (o):
-		return o.name
+		return o.x
 
 class Bool (Node, tree.Unit):
 	def __init__ (o, v):

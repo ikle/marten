@@ -110,7 +110,7 @@ class Var (Node, ast.Node):
 
 class Name (Node, ast.Name):
 	def unify (o, t):
-		if type (t) is not Name or o.name != t.name:
+		if type (t) is not Name or o.x != t.x:
 			t.touch (o.touch ())
 			raise TypeError ("Type mismatch: {} ≠ {}".format (o, t))
 
