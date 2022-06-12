@@ -65,9 +65,9 @@ def unify (a, b):
 	else:
 		b.unify (a)
 
-class Var (Node, ast.Name):
+class Var (Node, ast.Node):
 	def __init__ (o, name = None, instance = None):
-		super ().__init__ (name)
+		o.name     = name
 		o.instance = instance
 
 	def touch (o, i = 0):
