@@ -30,6 +30,9 @@ class Unit:
 	def rflatten (o, z = None):
 		return o
 
+	def rotate_left (o):
+		return o
+
 	def prune (o):
 		return o
 
@@ -81,6 +84,13 @@ class Pair (Op):
 			z = y if z is None else to (y, z)
 
 		return o.x.rflatten (z) if tx is to else to (o.x.rflatten (), z)
+
+	def rotate_left (o):
+		while o.a and type (o.y) is type (o):
+			to = type (o)
+			o = to (to (o.x, o.y.x).rotate_left (), o.y.y)
+
+		return o
 
 	def prune (o):
 		if o.x == o.zero or o.y == o.zero:
