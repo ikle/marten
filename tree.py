@@ -6,10 +6,10 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
-class Tree:
+class Node:
 	pass
 
-class Unit (Tree):
+class Unit (Node):
 	def __init__ (o, x):
 		o.x = x
 
@@ -19,7 +19,7 @@ class Unit (Tree):
 	def __eq__ (a, b):
 		return type (a) == type (b) and a.x == b.x
 
-class Pair (Tree):
+class Pair (Node):
 	def __init__ (o, x, y):
 		o.x = x
 		o.y = y
