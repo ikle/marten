@@ -17,7 +17,7 @@ class Unit (Expr):
 		o.x = x
 
 	def __hash__ (o):
-		return hash (o.x)
+		return hash (type (o)) + hash (o.x)
 
 	def __eq__ (a, b):
 		return type (a) == type (b) and a.x == b.x
