@@ -9,7 +9,8 @@
 import ast
 
 class Expr:
-	pass
+	def __lt__ (a, b):
+		return str (a) < str (b)
 
 class Unit (Expr):
 	def __init__ (o, x):
@@ -23,15 +24,6 @@ class Unit (Expr):
 
 	def __eq__ (a, b):
 		return type (a) == type (b) and a.x == b.x
-
-	def __lt__ (a, b):
-		if isinstance (b, Pair):
-			return True
-
-		if type (a) is not type (b):
-			return type (a).__name__ < type (b).__name__
-
-		return a.x < b.x
 
 	def rotate_left (o):
 		return o
@@ -65,15 +57,6 @@ class Pair (Op):
 			return False
 
 		return a.x == b.x and a.y == b.y
-
-	def __lt__ (a, b):
-		if isinstance (b, Unit):
-			return False
-
-		if type (a) is not type (b):
-			return type (a).__name__ < type (b).__name__
-
-		return a.y < b.y if a.x == b.x else a.x < b.x
 
 	def rotate_left (o):
 		while o.a and type (o.y) is type (o):
