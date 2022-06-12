@@ -148,23 +148,6 @@ class Pair (Op):
 
 		return type (o) (o.x.prune (), o.y.prune ()).rotate_left ().sort ()
 
-def prune (o):
-	if isinstance (o, Unit):
-		return o
-
-	L = [prune (e) for e in o.args]
-
-	if o.zero is not None:
-		L = [e for e in L if e != o.zero]
-
-	if o.a:
-		L = flatten (o, L)
-
-	if o.c:
-		L = sorted (L)
-
-	return o.zero if not L else L[0] if len (L) == 1 else type (o) (*L)
-
 class Name (Unit, ast.Name):
 	def __init__ (o, x):
 		o.x = o.name = x
