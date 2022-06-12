@@ -29,25 +29,17 @@ class Name (Node, tree.Unit):
 		return o.x
 
 class Bool (Node, tree.Unit):
-	def __init__ (o, v):
-		o.x = v
-
 	def __repr__ (o):
 		return str (o.x).lower ()
 
 class Int (Node, tree.Unit):
-	def __init__ (o, v):
-		o.x = v
-
 	def __repr__ (o):
 		return str (o.x)
 
 # core compound nodes
 
 class Pair (Node, tree.Pair):
-	def __init__ (o, x, y):
-		o.x = x
-		o.y = y
+	pass
 
 class Func (Pair):
 	pri = 2
