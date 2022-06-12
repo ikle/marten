@@ -82,14 +82,14 @@ class Pair (Op):
 
 		return o
 
-	def get_args (o, A = []):
+	def get_args (o):
 		if o.c and type (o.x) is type (o):
-			o.x.get_args (A)
+			A = o.x.get_args ()
 		else:
-			A.append (o.x)
+			A = [o.x]
 
 		if o.c and type (o.y) is type (o):
-			o.y.get_args (A)
+			A.extend (o.y.get_args ())
 		else:
 			A.append (o.y)
 
@@ -105,7 +105,7 @@ class Pair (Op):
 		if not o.c:
 			return o
 
-		A = o.get_args ([])
+		A = o.get_args ()
 		return o.remap ({k: v for (k, v) in zip (A, sorted (A))})
 
 	def prune (o):
