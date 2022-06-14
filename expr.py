@@ -74,9 +74,11 @@ class Pair (Node, tree.Pair):
 		return o.remap ({k: v for (k, v) in zip (A, sorted (A))})
 
 	def prune (o):
-		if o.x == o.zero or o.y == o.zero:
-			o = o.x if o.y == o.zero else o.y
-			return o.prune ()
+		if o.x == o.zero:
+			return o.y.prune ()
+
+		if o.y == o.zero:
+			return o.x.prune ()
 
 		while type (o.y) in o.ld:
 			to = type (o)
