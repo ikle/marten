@@ -9,8 +9,14 @@
 import tree
 
 class Node:
+	pass
+
+class Unit (Node, tree.Unit):
 	def __lt__ (a, b):
-		return type (a).__name__ < type (b).__name__
+		if type (b) is not type (a):
+			return type (a).__name__ < type (b).__name__
+
+		return a.x < b.x
 
 	def rotate_left (o):
 		return o
@@ -20,13 +26,6 @@ class Node:
 
 	def prune (o):
 		return o
-
-class Unit (Node, tree.Unit):
-	def __lt__ (a, b):
-		if type (b) is not type (a):
-			return type (a).__name__ < type (b).__name__
-
-		return a.x < b.x
 
 class Pair (Node, tree.Pair):
 	zero = None	# identity value
