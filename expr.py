@@ -18,7 +18,7 @@ class Unit (Node, tree.Unit):
 
 		return a.x < b.x
 
-	def rotate_left (o):
+	def flatten (o):
 		return o
 
 	def remap (o, M):
@@ -40,10 +40,10 @@ class Pair (Node, tree.Pair):
 
 		return a.y < b.y if a.x == b.x else a.x < b.x
 
-	def rotate_left (o):
+	def flatten (o):
 		while o.a and type (o.y) is type (o):
 			to = type (o)
-			o = to (to (o.x, o.y.x).rotate_left (), o.y.y)
+			o = to (to (o.x, o.y.x).flatten (), o.y.y)
 
 		return o
 
@@ -86,4 +86,4 @@ class Pair (Node, tree.Pair):
 			to = type (o)
 			o  = type (o.x) (to (o.x.x, o.y), to (o.x.y, o.y))
 
-		return type (o) (o.x.prune (), o.y.prune ()).rotate_left ().sort ()
+		return type (o) (o.x.prune (), o.y.prune ()).flatten ().sort ()
