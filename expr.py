@@ -18,9 +18,6 @@ class Unit (Node, tree.Unit):
 
 		return a.x < b.x
 
-	def flatten (o):
-		return o
-
 	def remap (o, M):
 		return M.get (o, o)
 
