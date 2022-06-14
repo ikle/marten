@@ -48,17 +48,10 @@ class Pair (Node, tree.Pair):
 		return o
 
 	def get_args (o):
-		if o.c and type (o.x) is type (o):
-			A = o.x.get_args ()
-		else:
-			A = [o.x]
+		X = o.x.get_args () if o.c and type (o.x) is type (o) else [o.x]
+		Y = o.y.get_args () if o.c and type (o.y) is type (o) else [o.y]
 
-		if o.c and type (o.y) is type (o):
-			A.extend (o.y.get_args ())
-		else:
-			A.append (o.y)
-
-		return A
+		return X + Y
 
 	def remap (o, M):
 		if o in M:
