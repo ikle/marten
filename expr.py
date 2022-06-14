@@ -10,7 +10,7 @@ import tree
 
 class Node:
 	def __lt__ (a, b):
-		return str (a) < str (b)
+		return type (a).__name__ < type (b).__name__
 
 	def rotate_left (o):
 		return o
@@ -22,7 +22,11 @@ class Node:
 		return o
 
 class Unit (Node, tree.Unit):
-	pass
+	def __lt__ (a, b):
+		if type (b) is not type (a):
+			return type (a).__name__ < type (b).__name__
+
+		return a.x < b.x
 
 class Pair (Node, tree.Pair):
 	zero = None	# identity value
@@ -30,6 +34,12 @@ class Pair (Node, tree.Pair):
 	c    = False	# is commutative?
 	ld   = set ()	# set of ops this one left-distributive over
 	rd   = set ()	# set of ops this one right-distributive over
+
+	def __lt__ (a, b):
+		if type (b) is not type (a):
+			return type (a).__name__ < type (b).__name__
+
+		return a.y < b.y if a.x == b.x else a.x < b.x
 
 	def rotate_left (o):
 		while o.a and type (o.y) is type (o):
