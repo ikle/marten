@@ -87,7 +87,7 @@ class Var (Node, ast.Node):
 		return o if o.instance is None else o.instance.prune ()
 
 	def __contains__ (o, v):
-		return o == v if o.instance is None else v in o.instance
+		return o is v if o.instance is None else v in o.instance
 
 	def fresh (o, env, non_generic):
 		if any (o in t for t in non_generic):
@@ -99,7 +99,7 @@ class Var (Node, ast.Node):
 		return env[o]
 
 	def unify (o, t):
-		if o == t:
+		if o is t:
 			return
 
 		if o in t:
