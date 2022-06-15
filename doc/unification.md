@@ -23,6 +23,7 @@ Definitions:
 
 * Let L is a sequence of arguments of Ψ.
 * Let L[i] is a i-th argument of Ψ.
+* Read x/y as substitute y with x.
 
 Unify (Ψ₁, Ψ₂) =
 
