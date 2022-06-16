@@ -15,12 +15,14 @@ class Int (expr.Unit, ast.Int):
 	pass
 
 class Add (expr.Pair, ast.Add):
-	zero = Int (0)
+	lu   = Int (0)
+	ru   = Int (0)
 	a    = True
 	c    = True
 
 class Mul (expr.Pair, ast.Mul):
-	zero = Int (1)
+	lu   = Int (1)
+	ru   = Int (1)
 	a    = True
 	c    = True
 	ld   = {Add}

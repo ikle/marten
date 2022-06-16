@@ -25,7 +25,8 @@ class Unit (Node, tree.Unit):
 		return o
 
 class Pair (Node, tree.Pair):
-	zero = None	# identity value
+	lu   = None	# left unit (identity) value
+	ru   = None	# right unit (identity) value
 	a    = False	# is associative?
 	c    = False	# is commutative?
 	ld   = set ()	# set of ops this one left-distributive over
@@ -64,10 +65,10 @@ class Pair (Node, tree.Pair):
 		return o.remap ({k: v for (k, v) in zip (A, sorted (A))})
 
 	def prune (o):
-		if o.x == o.zero:
+		if o.x == o.lu:
 			return o.y.prune ()
 
-		if o.y == o.zero:
+		if o.y == o.ru:
 			return o.x.prune ()
 
 		while type (o.y) in o.ld:
